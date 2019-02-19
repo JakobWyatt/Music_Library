@@ -1,0 +1,143 @@
+\documentclass{article}
+
+    \usepackage{listings}
+    \usepackage{color}
+
+    \definecolor{dkgreen}{rgb}{0,0.6,0}
+    \definecolor{gray}{rgb}{0.5,0.5,0.5}
+    \definecolor{mauve}{rgb}{0.58,0,0.82}
+
+    \lstset{frame=tb,
+      language=Java,
+      aboveskip=3mm,
+      belowskip=3mm,
+      showstringspaces=false,
+      columns=flexible,
+      basicstyle={\small\ttfamily},
+      numbers=none,
+      numberstyle=\tiny\color{gray},
+      keywordstyle=\color{blue},
+      commentstyle=\color{dkgreen},
+      stringstyle=\color{mauve},
+      breaklines=true,
+      breakatwhitespace=true,
+      tabsize=3
+    }
+
+\begin{document}
+    \begin{center}
+        \huge
+        Stage 1 Report\\
+        \large
+        Jakob Wyatt 19477143\\
+        COMP1001\\
+        05/10/2018
+    \end{center}
+    \normalsize
+    \section{Menu Implementation Decisions}
+    The main menu is one of the most critical parts of the music library program,
+        as almost all interaction with the user is done via a menu.
+    A good menu should:
+    \begin{itemize}
+        \item Inform the user of the available options.
+        \item Be easy to exit.
+        \item Inform the user if input is invalid.
+    \end{itemize}
+   	Despite different types of menus being used in this program, they share some common logic amongst them.\\
+   	The first step of any menu is a prompt. This lets the user know which options are available and how to select each option.
+   	In this program, options are numerated with integers, which are incremented from 1 upwards, until all menu options can be selected
+		via input of an integer.\\
+   	The second step of the menu is to get user input from the command line.\\
+   	The third step differs across some menus, however there are still similarities across menu types.
+   	If the input is invalid, repeat the process, this time changing the prompt to inform the user that their input was invalid.
+   	If the user wants the menu to exit, then the menu should exit.
+   	If the user selects a valid option, then the option should be executed, and the menu should either loop again or exit.\\
+   	In this document, menus that loop upon valid input will be called looping menus, and menus that do not loop upon valid input will
+   		be called non-looping menus.\\
+	In non-looping menus, the only time that looping is required is when invalid input is entered. Therefore, if invalid input is dealt
+		with within a submodule, the logic required in non-looping menus can be simplified.\\
+	This brings us to the menu approach used in this program. All menu related user input and output is done within 1 submodule, promptRangedIntInput.
+	This submodule prompts the user for integer input. If the input is invalid, then the prompt will inform the user that their input was invalid, and which inputs are valid.
+	The submodule then loops until valid input is reached. By ensuring that input is valid before reaching the menu logic, non-looping menus can be implemented in one less layer of logic.
+	This also simplifies looping menus, and reduces code duplication in error messages presented to the user.
+    \section{Approach to Data Validation}
+    When designing this program, some top level goals were
+    created for the data validation stage of the assignment. These goals were:
+    \begin{itemize}
+        \item Show the user exactly where the error occured.
+        \item Tell the user what was invalid about their input.
+        \item Inform the user as to how to fix the error,
+            while keeping error messages relatively consise.
+        \item Make validation submodules accessible and easy
+            to use from other parts of the program.
+    \end{itemize}
+    Challenges that were faced during implementation of data validation included:
+    \begin{itemize}
+        \item When should data validation be done in the
+            FileManager class instead of the Validation class?
+        \item Should the Validation submodules indicate invalid input via return values, or exceptions?
+    \end{itemize}
+    It was decided that validation of the arguments passed to MusicStub should be done within
+        the Validation class, with any CSV-related or datatype conversion errors handled within
+        FileManager.\\
+    This is because, in Stage 2 of this assignment, a requirement of the program
+        is that songs can be added to the library via user input.
+    As methods within the Scanner class convert user input from a string to
+        the required datatype via the Scanner API, it was decided that minimal datatype
+        conversion would take place within the Validation submodules.\\
+    This means that any real inputs are not redundantly converted more than once
+        before being passed to the MusicStub methods.
+    Another advantage to this approach is that, in Stage 2, it is easier to refactor
+        the Validation submodules into constructors for different music classes.\\\\
+
+    It was decided that the Validation submodules will use return values, rather than exceptions,
+        to indicate invalid input to the program.
+    Initially, the approach to this problem was to return a boolean value, indicating that a set of
+        values for a music type were valid or not. Although this method worked well, it did not fufill
+        all of the requirements above, namely "Show the user where the error occured." This approach only
+        shows the line of the error, and does not inform the user of the specific datafield where the error
+        occured.
+    There were 2 ways to return a detailed error message informing the user about exactly what was wrong.
+    The first was by returning a string, detailing the errors present in the data. If the data was valid,
+        this string would be set to null.
+    The second was by throwing an exception if there was an error in the data, which meant that the method would return no values.\\
+    It was decided that the first way, via return values, was better code. This is because exceptions,
+        by their name, should be used for exceptional circumstances. As the purpose of the submodule is to determine if data is valid,
+        a thrown exception would not be an exceptional circumstance, making it more akin to multiple returns within a method, which is not allowed
+        in this unit.
+    \\\\
+    The implementation of the Validation submodules themselves were trivial, once the top-level design
+        choices had been made. Each top-level Validation method called private methods within the class,
+        which validated each individual data field. This enabled code reuse between the different Validation submodules.
+    Error messages for each data field were made public constants within the class, enabling them to be used across other
+    	submodules in the program. This enabled more code reuse and a consistent error style in the program.
+    \section{Challenges Faced in Implementation/Design}
+	There were two main challenges faced in the implementation and design of this program. These challenges were: Where and when should user output be printed,
+		and when should a method throw an exception.
+	\subsection{User Output}
+	When refactoring user output, it is easiest to modify the output when it is done in few places within the program. However, there are some situations where
+		it is too difficult to relocate user output to 'higher-level' methods. This section discusses the design choices made with regards to where user output should be implemented.\\
+	Within FileManager, there were three distinct areas where user output needed to be implemented. These areas were: Notifing the user that an error occured
+		(Discussed in Section 3.2), notifing the user that a line of file input was invalid, and prompting the user for filename input.\\\\
+	In an ideal design, a transcript of the file processing would be produced. This transcript would detail which lines were valid, which lines were invalid, and how to fix these invalid lines.
+	This enables the calling method to either store, log, or output this transcript.
+	However, this is not possible in the current iteration of the program. This is because the musicStub methods output a message to the user if the details are valid.
+	Because of this, any errors in CSV processing must be output to the user in the same submodule that calls the musicStub methods.\\\\
+	Where to prompt the user for filename input was not a difficult design choice to make. Two methods were created, getFileNameW and getFileNameR, that prompt the user for a
+		filename and ensure the filename is valid. getFileNameW also checks if a file would be overwritten, and prompts the user to confirm that they intend to overwrite a file.
+	\subsection{Exceptions}
+	There are three different ways to deal with an error, each with their own benefits and drawbacks.
+	\begin{enumerate}
+		\item Throw an exception.
+		\item Inform the user that an error occured.
+		\item Return an error code.
+	\end{enumerate}
+	In this program, (1) was used whenever the calling method needed to know that an error occured. One example of this is file input. The assignment brief states that, in Stage 2, the Music Library
+		must be initialized with a file upon starting the program. Because of this, if an error occurs in file input, the startup of the program should fail. Therefore, the inputFile method should throw
+		an exception, and inform the calling method that it failed.\\
+	(2) was used whenever the method could handle an error by itself, and the calling method did not need to know that an error occured. One example of this is file output. If file output fails,
+		the user should be informed. However, the calling method does not need to know that file output failed, as there is no way to determine if file output should be reattempted without user input.
+		By informing the user that file output failed within the submodule, it allows the user to decide if they want to attempt file output again, as well as decluttering the calling method.\\
+	(3) was used whenever the submodule needed to inform its calling method that it failed, and failing was an expected result after calling the method. This approach was used in data validation,
+		and discussed/justified in Section 2: Approach to Data Validation.
+\end{document}
