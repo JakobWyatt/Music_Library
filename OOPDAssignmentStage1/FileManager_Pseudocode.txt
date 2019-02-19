@@ -1,0 +1,511 @@
+// FILE: FileManager_Pseudocode.java
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Pseudocode for file IO for Music Library.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: Validation.java
+// Last Mod: 3/10/2018
+// Modification history:
+//  None
+
+//NAME: inputFile
+//PURPOSE: Prompt the user to input a filename.
+//  The current library is then initialized using data from this file.
+//IMPORTS: None
+//EXPORTS: None
+//Assertions:
+//  Pre: None
+//  Post: None
+//REMARKS: If a line of the file is invalid,
+//  then an error message will be printed,
+//  and the rest of the file will be read.
+//
+//If EOF has been reached on the command line,
+//      a NoSuchElementException will be thrown.
+//  If the input stream cannot be read from,
+//      an IllegalStateException will be thrown.
+//  If the file could not be found,
+//      a FileNotFoundException error is thrown.
+//  If there was an error while reading the file,
+//      an IOException is thrown.
+
+SUBMODULE: inputFile
+IMPORTS: None
+EXPORT: None
+ALGORITHM:
+    fileName := getFileNameR <- None
+
+    TRY
+        fileData (ARRAY OF String) := readFile <- fileName
+    CATCH File Input Error ex
+        THROW ex
+    END TRY CATCH
+
+    processCSV <- fileData
+END
+
+
+
+
+//NAME: outputFile
+//PURPOSE: Prompt the user to input a filename.
+//  The current library is then saved to this new file.
+//  The user will be informed if the file write succeeds or fails.
+//IMPORTS: None
+//EXPORT: None
+//Assertions:
+//  Pre: None
+//  Post: None
+//REMARKS: If EOF has been reached on the command line,
+//      a NoSuchElementException will be thrown.
+//  If the input stream cannot be read from,
+//      an IllegalStateException will be thrown.
+
+SUBMODULE: outputFile
+IMPORTS: None
+EXPORT: None
+ALGORITHM:
+    result := "Library has been written to file."
+
+    TRY
+        fileName := getFileNameW <- None
+        CONSTRUCT writer USING fileName
+        writer.outputLine <-
+        writer.outputLine <- "Data storage not yet implemented."
+        writer.outputLine <- "This is a test file."
+        writer.outputLine <- "To ensure the output is correctly printed."
+        IF writer.error <- None THEN
+            result := "Error: An unknown error has ocurred while " +
+                    "writing the library to the file."
+        END IF
+        CLOSE writer
+    CATCH File Not Found fileEx
+        result := "Error: Could not create the file."
+    END TRY CATCH
+
+    OUTPUT result
+END
+
+
+
+
+//NAME: readFile
+//PURPOSE: Read all input from a file into a string array,
+//  with each entry being seperated by a newline.
+//  Inform the user if the file processing failed.
+//IMPORTS: File Name
+//EXPORTS: File Data
+//Assertions:
+//  Pre: File Name is not null.
+//  Post: None.
+//REMARKS:
+//  If the file could not be found,
+//      a FileNotFoundException error is thrown.
+//  If there was an error while reading the file,
+//      an IOException is thrown.
+
+SUBMODULE: readFile
+IMPORTS: fileName (String)
+EXPORT: fileData (ARRAY OF String)
+ALGORITHM:
+    lineNum := 0
+
+    TRY
+        lines := fileLines <- fileName
+        fileData.length := lines
+        CONSTRUCT reader USING fileName
+
+        line := reader.readLine <- None
+        WHILE line EXISTS DO
+            fileData[lineNum] := line
+            line := reader.readLine <- None
+            lineNum := lineNum + 1
+        END WHILE
+
+        CLOSE reader
+    CATCH File Not Found fileEx
+        THROW fileEx
+    CATCH File Input Error ioEx
+        TRY
+            CLOSE reader
+        CATCH File Input Error closeEx
+            THROW closeEx
+        END TRY CATCH
+        THROW ioEx
+    END TRY CATCH
+END
+
+
+
+
+//NAME: fileLines
+//PURPOSE: Find the number of lines in a file.
+//IMPORTS: File Name
+//EXPORTS: Number of lines in the file
+//Assertions:
+//  Pre: File name is not null.
+//  Post: None.
+//REMARKS: Informs the user if file processing fails.
+//  Throws FileNotFoundException if the file was not found.
+//  Throws IOException if there was an error while reading the lines.
+
+SUBMODULE: fileLines
+IMPORTS: fileName (String)
+EXPORT: lineCount (Integer)
+ALGORITHM:
+    lineCount := 0
+
+    TRY
+        CONSTRUCT reader USING fileName
+        WHILE Line Exists DO
+            lineCount := lineCount + 1
+            reader.nextLine <- None
+        END WHILE
+        CLOSE reader
+    CATCH File Not Found fileEx
+        THROW fileEx
+    CATCH File Input Error ioEx
+        TRY
+            CLOSE reader
+        CATCH File Input Error closeEx
+            THROW closeEx
+        END TRY CATCH
+        THROW ioEx
+    END TRY CATCH
+END
+
+
+
+
+//NAME: getFileNameR
+//PURPOSE: Prompt the user to input a file name to read from.
+//  getFileNameR asks for input again if the file does not exist,
+//      or is a directory.
+//IMPORTS: None
+//EXPORTS: File path
+//Assertions:
+//  Pre: None
+//  Post: None
+//REMARKS: If EOF has been reached on the command line,
+//      a NoSuchElementException will be thrown.
+//  If the input stream cannot be read from,
+//      an IllegalStateException will be thrown.
+
+SUBMODULE: getFileNameR
+IMPORTS: None
+EXPORT: filePath (String)
+ALGORITHM:
+    prompt := "Please enter the filename to read from: "
+    strout := prompt
+
+    DO
+        validFileName := TRUE
+        OUTPUT strout
+        INPUT filePath (String)
+        CONSTRUCT file USING filePath
+        IF file DOESNT EXIST THEN
+            validFileName := FALSE
+            strout := "This file does not exist.\n" + prompt
+        END IF
+        IF file IS A DIRECTORY THEN
+            validFileName := FALSE
+            strout := "Cannot read from a directory name.\n" + prompt
+        END IF
+    WHILE !validFileName
+END
+
+
+
+
+//NAME: getFileNameW
+//PURPOSE: Prompt the user to input a file name to write to.
+//  getFileNameW asks for input again if the file name is a directory,
+//      and will ask for confirmation before overwriting existing files.
+//IMPORTS: None
+//EXPORTS: File Path
+//Assertions:
+//  Pre: None
+//  Post: The file path points to a valid, writeable file.
+//REMARKS: If EOF has been reached on the command line,
+//      a NoSuchElementException will be thrown.
+//  If the input stream cannot be read from,
+//      an IllegalStateException will be thrown.
+
+SUBMODULE: getFileNameW
+IMPORTS: None
+EXPORT: filePath (String)
+ALGORITHM:
+    prompt := "Please enter the filename to save to: "
+    strout := prompt
+
+    DO
+        validFileName := TRUE
+        OUTPUT strout
+        INPUT filePath (String)
+        CONSTRUCT file USING filePath
+        IF file EXISTS THEN
+            validFileName := promptOverwrite <- None
+            strout := prompt
+        END IF
+        IF file IS A DIRECTORY THEN
+            validFileName := FALSE
+            strout := "Cannot write to a directory name.\n" + prompt
+        END IF
+    WHILE !validFileName
+END
+
+
+
+
+//NAME: promptOverwrite
+//PURPOSE: Check if the user wants to overwrite a file.
+//IMPORTS: None
+//EXPORTS: TRUE if the file will be overwritten, FALSE otherwise.
+//Assertions:
+//  Pre: None
+//  Post: None
+//REMARKS: If EOF has been reached on the command line,
+//      a NoSuchElementException will be thrown.
+//  If the input stream cannot be read from,
+//      an IllegalStateException will be thrown.
+
+SUBMODULE: promptOverwrite
+IMPORTS: None
+EXPORTS: overwrite (Boolean)
+ALGORITHM:
+    OUTPUT "This file exists. Do you want to overwrite it?\nYes(y) | No (n)"
+    validInput := TRUE
+    overwrite := FALSE
+
+    DO
+        validInput := TRUE
+        INPUT decision (Character)
+        CASE decision
+            'y', 'Y':
+                overwrite := true
+            'n', 'N':
+
+            DEFAULT:
+                validInput := FALSE
+                OUTPUT "Invalid input. Please try again."
+        END CASE
+    WHILE !validInput
+END
+
+
+
+
+//NAME: processCSV
+//PURPOSE: Read and validate a CSV file, stored in a string,
+//  and use it to initialize the music library.
+//IMPORTS: CSV File
+//EXPORTS: None
+//Assertions:
+//  Pre: CSV File is not null
+//  Post: None
+//REMARKS: None
+
+SUBMODULE: processCSV
+IMPORTS: csv (ARRAY OF String)
+EXPORT: None
+ALGORITHM:
+    lineNum := 0
+    recordNum := 0
+    digitalNum := 0
+    cassetteNum := 0
+
+    IF csv.LENGTH = 0 THEN
+        OUTPUT "Discarding file: Empty File."
+    END IF
+
+    FOR i = 0 TO csv.LENGTH (Exclusive) INC BY 1
+        lineNum := lineNum + 1
+        IF csv[i].LENGTH = 0 THEN
+            OUTPUT "Discarding line " + lineNum + ": Empty CSV Row."
+        ELSE
+            CASE csv[i].charAt <- 0
+                'r', 'R':
+                    recordNum := processRecord <- csv[i]. lineNum,
+                        recordNum
+                'd', 'D':
+                    digitalNum := processDigital <- csv[i], lineNum,
+                        digitalNum
+                'c', 'C':
+                    cassetteNum := processCassette <- csv[i], lineNum,
+                        cassetteNum
+                DEFAULT:
+                    OUTPUT "Discarding line " + lineNum +
+                        ": Invalid Music Type."
+            END CASE
+        END IF
+    END FOR
+END
+
+
+
+
+//NAME: processRecord
+//PURPOSE: Parse and validate a CSV row
+//  containing music library data for a record.
+//IMPORTS: Row data, row line number,
+//  number of records already processed.
+//EXPORTS: Number of records processed so far.
+//Assertions:
+//  Pre: First character of Row data is either 'r' or 'R'.
+//  Post: None
+//REMARKS: If there were errors during processing,
+//  the row line number is not incremented.
+
+SUBMODULE: processRecord
+IMPORTS: rowData (String), lineNum (Integer), recordNum (Integer)
+EXPORT: recordNum (Integer)
+ALGORITHM:
+    data := rowData.split <- ","
+
+    errorTemplate := "Discarding line " + lineNum + ": "
+    allErrors := ""
+    parseError := ""
+
+    IF data.LENGTH != 6 THEN
+        allErrors := allErrors + errorTemplate +
+            "Invalid number of comma seperated values.\n"
+    ELSE IF recordNum >= 10 THEN
+        allErrors := allErrors + errorTemplate +
+            "Maximum number of records (10) has been reached.\n"
+    ELSE
+        TRY
+            parseError := Validation.DURATION_ERROR
+            duration := parseDouble <- data[3]
+            parseError := Validation.TRACK_NUMBER_ERROR
+            trackNumber := parseInt <- data[4]
+
+            validationError := Validation.recordErrors <- data[1],
+                data[2], duration, trackNumber, data[5]
+
+            IF validationError = VALID THEN
+                recordNum := recordNum + 1
+                MusicStub.addRecord <- data[1], data[2], duration,
+                    trackNumber, data[5]
+            ELSE
+                allErrors := allErrors + errorTemplate + validationError
+            END IF
+        CATCH Number Conversion Error e
+            allErrors := allErrors + errorTemplate + parseError + "\n"
+        END TRY CATCH
+    END IF
+
+    OUTPUT allErrors
+END
+
+
+
+
+//NAME: processDigital
+//PURPOSE: Parse and validate a CSV row
+//  containing music library data for a digital music file.
+//IMPORTS: Row data, row line number,
+//  number of records already processed.
+//EXPORTS: Number of digital music files processed so far.
+//Assertions:
+//  Pre: First character of Row data is either 'd' or 'D'.
+//  Post: None
+//REMARKS: If there were errors during processing,
+//  the row line number is not incremented.
+
+SUBMODULE: processDigital
+IMPORTS: rowData (String), lineNum (Integer), digitalNum (Integer)
+EXPORT: digitalNum (Integer)
+ALGORITHM:
+    data := rowData.split <- ","
+
+    errorTemplate := "Discarding line " + lineNum + ": "
+    allErrors := ""
+
+    IF data.LENGTH != 5 THEN
+        allErrors := allErrors + errorTemplate +
+            "Invalid number of comma seperated values.\n"
+    ELSE IF digitalNum >= 10 THEN
+        allErrors := allErrors + errorTemplate +
+            "Maximum number digital music files (10) has been reached.\n"
+    ELSE
+        TRY
+            duration := parseDouble <- data[3]
+
+            validationError := Validation.digitalErrors <- data[1],
+                data[2], duration, data[4]
+
+            IF validationError = VALID THEN
+                digitalNum := digitalNum + 1
+                MusicStub.addDigital <- data[1], data[2], duration,
+                    data[4]
+            ELSE
+                allErrors := allErrors + errorTemplate +
+                    Validation.DURATION_ERROR + "\n"
+            END IF
+        CATCH Number Conversion Error e
+            allErrors := allErrors + errorTemplate +
+                Validation.DURATION_ERROR + "\n"
+        END TRY CATCH
+    END IF
+
+    OUTPUT allErrors
+END
+
+
+
+
+//NAME: processCassette
+//PURPOSE: Parse and validate a CSV row
+//  containing music library data for a cassette.
+//IMPORTS: Row data, row line number,
+//  number of cassettes already processed.
+//EXPORTS: Number of cassettes processed so far.
+//Assertions:
+//  Pre: First character of Row data is either 'c' or 'C'.
+//  Post: None
+//REMARKS: If there were errors during processing,
+//  the row line number is not incremented.
+
+SUBMODULE: processCassette
+IMPORTS: rowData (String), lineNum (Integer), cassetteNum (Integer)
+EXPORT: cassetteNum (Integer)
+ALGORITHM:
+    data := rowData.split <- ","
+
+    errorTemplate := "Discarding line " + lineNum + ": "
+    allErrors := ""
+    parseError := ""
+
+    IF data.LENGTH != 7 THEN
+        allErrors := allErrors + errorTemplate +
+            "Invalid number of comma seperated values.\n"
+    ELSE IF cassetteNum >= 10 THEN
+        allErrors := allErrors + errorTemplate +
+            "Maximum number of cassettes (10) has been reached.\n"
+    ELSE
+        TRY
+            parseError := Validation.DURATION_ERROR
+            duration := parseDouble <- data[3]
+            parseError := Validation.TRACK_NUMBER_ERROR
+            trackNumber := parseInt <- data[4]
+            parseError := Validation.START_TIME_ERROR
+            startTime := parseDouble <- data[5]
+
+            validationError := Validation.recordErrors <- data[1],
+                data[2], duration, trackNumber, startTime, data[6]
+
+            IF validationError = VALID THEN
+                cassetteNum := cassetteNum + 1
+                MusicStub.addRecord <- data[1],
+                    data[2], duration, trackNumber, startTime, data[6]
+            ELSE
+                allErrors := allErrors + errorTemplate + validationError
+            END IF
+        CATCH Number Conversion Error e
+            allErrors := allErrors + errorTemplate + parseError + "\n"
+        END TRY CATCH
+    END IF
+
+    OUTPUT allErrors
+END
