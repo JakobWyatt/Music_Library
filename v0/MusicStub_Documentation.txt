@@ -1,0 +1,8 @@
+Compiled from "MusicStub.java"
+public class MusicStub {
+  public MusicStub();
+  public static void addRecord(java.lang.String, java.lang.String, double, int, java.lang.String);
+  public static void addDigital(java.lang.String, java.lang.String, double, java.lang.String);
+  public static void addCassette(java.lang.String, java.lang.String, double, int, double, char);
+  static {};
+}
