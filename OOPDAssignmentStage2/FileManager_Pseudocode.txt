@@ -1,0 +1,98 @@
+// FILE: FileManager_Pseudocode.java
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Pseudocode for file IO for Music Library.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: Validation.java
+// Last Mod: 3/10/2018
+// Modification history:
+//  None
+
+SUBMODULE: writeFile
+IMPORTS: fileName (String), fileData (ARRAY OF String)
+EXPORT: None
+ALGORITHM:
+    IF fileName = NULL OR fileData = NULL THEN
+        THROW IllegalArgument <- "Filename and Filedata cannot be null."
+    END IF
+
+    TRY
+        CONSTRUCT writer USING fileName
+        FOR i := 0 TO LENGTH OF fileData (Exclusive) INC BY 1
+            IF fileData[i] = NULL THEN
+                THROW IllegalArgument <- "Filedata lines cannot be null."
+            END IF
+            writer.println <- fileData[i]
+        END FOR
+        CLOSE writer
+        IF writer.error <- None THEN
+            THROW File Input Exception <-
+                "Error: Could not write to the file."
+        END IF
+    CATCH File Not Found fileEx
+        THROW File Not Found <- "Error: Could not create the file."
+    END TRY CATCH
+END
+
+
+
+
+SUBMODULE: readFile
+IMPORTS: fileName (String)
+EXPORT: fileData (ARRAY OF String)
+ALGORITHM:
+    lineNum := 0
+
+    TRY
+        lines := fileLines <- fileName
+        fileData.length := lines
+        CONSTRUCT reader USING fileName
+
+        line := reader.readLine <- None
+        WHILE line EXISTS DO
+            fileData[lineNum] := line
+            line := reader.readLine <- None
+            lineNum := lineNum + 1
+        END WHILE
+
+        CLOSE reader
+    CATCH File Not Found fileEx
+        THROW fileEx
+    CATCH File Input Error ioEx
+        TRY
+            CLOSE reader
+        CATCH File Input Error closeEx
+            THROW closeEx
+        END TRY CATCH
+        THROW ioEx
+    END TRY CATCH
+END
+
+
+
+
+SUBMODULE: fileLines
+IMPORTS: fileName (String)
+EXPORT: lineCount (Integer)
+ALGORITHM:
+    lineCount := 0
+
+    TRY
+        CONSTRUCT reader USING fileName
+        WHILE Line Exists DO
+            lineCount := lineCount + 1
+            reader.nextLine <- None
+        END WHILE
+        CLOSE reader
+    CATCH File Not Found fileEx
+        THROW fileEx
+    CATCH File Input Error ioEx
+        TRY
+            CLOSE reader
+        CATCH File Input Error closeEx
+            THROW closeEx
+        END TRY CATCH
+        THROW ioEx
+    END TRY CATCH
+END
