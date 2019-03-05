@@ -1,0 +1,577 @@
+// FILE: MusicCollection_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class that controls arrays of music objects.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 17/10/2018
+// Modification history:
+//  None
+
+CLASS MusicCollection:
+
+    CLASS CONSTANTS:
+
+    MUSIC_MAX := 10
+
+    CLASS FIELDS:
+
+
+    records (ARRAY OF Record) (LENGTH OF records := MUSIC_MAX)
+    digitals (ARRAY OF Digital) (LENGTH OF digital := MUSIC_MAX)
+    cassettes (ARRAY OF Cassette) (LENGTH OF cassettes := MUSIC_MAX)
+    recordNum (Integer)
+    digitalNum (Integer)
+    cassetteNum (Integer)
+
+
+
+
+    PUBLIC SUBMODULES:
+
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        recordNum := 0
+        digitalNum := 0
+        cassetteNum := 0
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR
+    IMPORTS: inRecords (ARRAY OF Record), inDigitals (ARRAY OF Digital),
+        inCassettes (ARRAY OF Cassette)
+    EXPORT:
+    ALGORITHM:
+        THIS.setRecord <- inRecords
+        THIS.setDigitals <- inDigitals
+        THIS.setCassettes <- inCassettes
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inMusicCollection (MusicCollection)
+    EXPORT:
+    ALGORITHM:
+        IF inMusicCollection = NULL THEN
+            THROW IllegalArgument <- "Music collection cannot be null"
+        END IF
+        THIS.setRecords <- inMusicCollection.getRecords <- None
+        THIS.setDigitals <- inMusicCollection.getDigitals <- None
+        THIS.setCassettes <- inMusicCollection.getCassettes <- None
+    END
+
+
+
+
+    SUBMODULE: getRecords
+    IMPORTS: None
+    EXPORT: outRecords (ARRAY OF Record)
+    ALGORITHM:
+        FOR i := 0 TO recordNum (Exclusive) INC BY 1
+            outRecords[i] := records[i].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: getDigitals
+    IMPORTS: None
+    EXPORT: outDigitals (ARRAY OF Digital)
+    ALGORITHM:
+        FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+            outDigitals[i] := digitals[i].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: getCassettes
+    IMPORTS: None
+    EXPORT: outCassettes (ARRAY OF Cassette)
+    ALGORITHM:
+        FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+            outCassettes[i] := cassettes[i].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: setRecords
+    IMPORTS: inRecords (ARRAY OF Record)
+    EXPORT: None
+    ALGORITHM:
+        IF inRecords = NULL THEN
+            THROW IllegalArgument <- "Record array cannot be null."
+        END IF
+        IF LENGTH OF inRecords > MUSIC_MAX THEN
+            THROW IllegalArgument <-
+                "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+
+        FOR i := 0 TO LENGTH OF inRecords (Exclusive) INC BY 1
+            IF inRecords[i] = NULL THEN
+                THROW IllegalArgument <- "Records cannot be null."
+            END IF
+        END FOR
+        FOR i := 0 TO LENGTH OF inRecords (Exclusive) INC BY 1
+            records[i] := inRecords[i].clone <- None
+        END FOR
+        recordNum := LENGTH OF inRecords
+    END
+
+
+
+
+    SUBMODULE: setDigitals
+    IMPORTS: inDigitals (ARRAY OF Digital)
+    EXPORT: None
+    ALGORITHM:
+        IF inDigitals = NULL THEN
+            THROW IllegalArgument <- "Digital array cannot be null."
+        END IF
+        IF LENGTH OF inDigitals > MUSIC_MAX THEN
+            THROW IllegalArgument <-
+                "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+
+        FOR i := 0 TO LENGTH OF inDigitals (Exclusive) INC BY 1
+            IF inDigitals[i] = NULL THEN
+                THROW IllegalArgument <- "Digitals cannot be null."
+            END IF
+        END FOR
+        FOR i := 0 TO LENGTH OF inDigitals (Exclusive) INC BY 1
+            digitals[i] := inDigitals[i].clone <- None
+        END FOR
+        digitalNum := LENGTH OF inDigitals
+    END
+
+
+
+
+    SUBMODULE: setCassettes
+    IMPORTS: inCassettes (ARRAY OF Cassette)
+    EXPORT: None
+    ALGORITHM:
+        IF inCassettes = NULL THEN
+            THROW IllegalArgument <- "Cassette array cannot be null."
+        END IF
+        IF LENGTH OF inCassettes > MUSIC_MAX THEN
+            THROW IllegalArgument <-
+                "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+
+        FOR i := 0 TO LENGTH OF inCassettes (Exclusive) INC BY 1
+            IF inCassettes[i] = NULL THEN
+                THROW IllegalArgument <- "Cassettes cannot be null."
+            END IF
+        END FOR
+        FOR i := 0 TO LENGTH OF inCassettes (Exclusive) INC BY 1
+            cassettes[i] := inCassettes[i].clone <- None
+        END FOR
+        cassetteNum := LENGTH OF inCassettes
+    END
+
+
+
+
+    SUBMODULE: addRecord
+    IMPORTS: inRecord (Record)
+    EXPORT: None
+    ALGORITHM:
+        IF inRecord = NULL THEN
+            THROW IllegalArgument <- "Record cannot be null."
+        END IF
+        IF recordNum >= MUSIC_MAX THEN
+            THROW IllegalArgument <-
+                "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+        records[recordNum] = inRecord.clone <- None
+        recordNum := recordNum + 1
+    END
+
+
+
+
+    SUBMODULE: addDigital
+    IMPORTS: inDigital (Digital)
+    EXPORT: None
+    ALGORITHM:
+        IF inDigital = NULL THEN
+            THROW IllegalArgument <- "Digital cannot be null."
+        END IF
+        IF digitalNum >= MUSIC_MAX THEN
+            THROW IllegalArgument <-
+                "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+        digitals[digitalNum] = inDigital.clone <- None
+        digitalNum := digitalNum + 1
+    END
+
+
+
+
+    SUBMODULE: addCassette
+    IMPORTS: inCassette (Cassette)
+    EXPORT: None
+    ALGORITHM:
+        IF inCassette = NULL THEN
+            THROW IllegalArgument <- "Cassette cannot be null."
+        END IF
+        IF cassetteNum >= MUSIC_MAX THEN
+            THROW IllegalArgument <-
+                "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+        cassettes[cassetteNum] = inCassette.clone <- None
+        cassetteNum := cassetteNum + 1
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF inObj INSTANCEOF MusicCollection THEN
+            inMusicCollection := (Convert to MusicCollection)inObj
+            same =  THIS.recordsEqual <-
+                    inMusicCollection.getRecords <- None AND
+                    THIS.digitalsEqual <-
+                    inMusicCollection.getDigitals <- None AND
+                    THIS.cassettesEqual <-
+                    inMusicCollection.getCassettes <- None
+        END IF
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: MusicCollectionString (String)
+    ALGORITHM:
+        MusicCollectionString := ""
+        FOR i := 0 TO recordNum (Exclusive) INC BY 1
+            MusicCollectionString := MusicCollectionString +
+                records[i].toString <- None + "\n"
+        END FOR
+        FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+            MusicCollectionString := MusicCollectionString +
+                digitals[i].toString <- None + "\n"
+        END FOR
+        FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+            MusicCollectionString := MusicCollectionString +
+                cassettes[i].toString <- None + "\n"
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORT: musicCollectionClone (MusicCollection)
+    ALGORITHM:
+        musicCollectionClone := CONSTRUCT MusicCollection USING THIS
+    END
+
+
+
+
+    SUBMODULE: duration
+    IMPORTS: None
+    EXPORT: totalDuration (Real)
+    ALGORITHM:
+        totalDuration := 0.0
+        FOR i := 0 TO recordNum (Exclusive) INC BY 1
+            totalDuration := records[i].addDuration <- totalDuration
+        END FOR
+        FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+            totalDuration := digitals[i].addDuration <- totalDuration
+        END FOR
+        FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+            totalDuration := cassettes[i].addDuration <- totalDuration
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: playAll
+    IMPORTS: None
+    EXPORT: instructions (String)
+    ALGORITHM:
+        instructions := ""
+        FOR i := 0 TO recordNum (Exclusive) INC BY 1
+            instructions := instructions +
+                records[i].play <- None + "\n"
+        END FOR
+        FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+            instructions := instructions +
+                digitals[i].play <- None + "\n"
+        END FOR
+        FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+            instructions := instructions +
+                cassettes[i].play <- None + "\n"
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: playSong
+    IMPORTS: inName (String)
+    EXPORT: instructions (String)
+    ALGORITHM:
+        rIter := 0
+        dIter := 0
+        cIter := 0
+        IF inName = NULL THEN
+            THROW IllegalArgument <- "Name cannot be null."
+        END IF
+
+        WHILE rIter != recordNum AND
+            !inName.equals <- records[dIter].getName <- None DO
+            rIter := rIter + 1
+        END WHILE
+        WHILE rIter != digitalNum AND
+            !inName.equals <- digitals[dIter].getName <- None DO
+            rIter := rIter + 1
+        END WHILE
+        WHILE rIter != cassetteNum AND
+            !inName.equals <- cassettes[dIter].getName <- None DO
+            rIter := rIter + 1
+        END WHILE
+
+        IF rIter = recordNum THEN
+            IF dIter = digitalNum THEN
+                IF cIter = cassetteNum THEN
+                    THROW IllegalArgument <-
+                        "The song was not found in the library."
+                ELSE
+                    instructions := cassettes[cIter].play <- None
+                END IF
+            ELSE
+                instructions := digitals[dIter].play <- None
+            END IF
+        ELSE
+            instructions := records[rIter].play <- None
+        END IF
+    END
+
+
+
+
+    SUBMODULE: searchRecords
+    IMPORTS: inPlaySpeed (String)
+    EXPORT: outRecords (ARRAY OF Record)
+    ALGORITHM:
+        indexNum := 0
+        FOR i := 0 TO recordNum (Exclusive) INC BY 1
+            IF records[i].search <- inPlaySpeed THEN
+                indexes[indexNum] := i
+                indexNum := indexNum + 1
+            END IF
+        END FOR
+
+        FOR i := 0 TO indexNum (Exclusive) INC BY 1
+            outRecords[i] := records[indexes[i]].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: searchDigitals
+    IMPORTS: inType (String)
+    EXPORT: outDigitals (ARRAY OF Digital)
+    ALGORITHM:
+        indexNum := 0
+        FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+            IF digitals[i].search <- inType THEN
+                indexes[indexNum] := i
+                indexNum := indexNum + 1
+            END IF
+        END FOR
+
+        FOR i := 0 TO indexNum (Exclusive) INC BY 1
+            outDigitals[i] := digitals[indexes[i]].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: searchCassettes
+    IMPORTS: inSide (String)
+    EXPORT: outCassettes (ARRAY OF Cassette)
+    ALGORITHM:
+        indexNum := 0
+        FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+            IF cassettes[i].search <- inSide THEN
+                indexes[indexNum] := i
+                indexNum := indexNum + 1
+            END IF
+        END FOR
+
+        FOR i := 0 TO indexNum (Exclusive) INC BY 1
+            outCassettes[i] := cassettes[indexes[i]].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: inputCSV
+    IMPORTS: csv (ARRAY OF String)
+    EXPORT: transcript (String)
+    ALGORITHM:
+        transcript := ""
+        IF csv = NULL THEN
+            THROW IllegalArgument <- "Array cannot be null."
+        END IF
+        IF LENGTH OF csv = 0 THEN
+            THROW IllegalArgument <- "Array cannot be empty."
+        END IF
+
+        FOR i := 0 TO LENGTH OF csv (Exclusive) INC BY 1
+            IF csv[i] = NULL THEN
+                THROW IllegalArgument <- "Elements of array cannot be null."
+            END IF
+        END FOR
+
+        FOR i := TO LENGTH OF csv (Exclusive) INC BY 1
+            transcript := transcript + THIS.processLine <- csv[i], i + "\n"
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (ARRAY OF String)
+    ALGORITHM:
+        outputNum := 0
+        FOR i := 0 TO recordNum (Exclusive) INC BY 1
+            output[outputNum] := records[i].outputCSV <- None
+            outputNum := outputNum + 1
+        END FOR
+        FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+            output[outputNum] := digitals[i].outputCSV <- None
+            outputNum := outputNum + 1
+        END FOR
+        FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+            output[outputNum] := cassettes[i].outputCSV <- None
+            outputNum := outputNum + 1
+        END FOR
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: processLine
+    IMPORTS: data (String), lineNum (Integer)
+    EXPORT: transcript (String)
+    ALGORITHM:
+        discard := "Discarding line " + ( lineNum + 1 ) + ": "
+
+        IF LENGTH OF data = 0 THEN
+            transcript := discard + "Empty CSV row."
+        ELSE
+            CASE data.charAt <- 0
+                'R', 'r':
+                    TRY
+                        THIS.addRecord <- CONSTRUCT Record USING data
+                        transcript := "Record details correct"
+                    CATCH IllegalArgument ex
+                        transcript := discard + ex.getMessage <- None
+                    END TRY CATCH
+                'D', 'd':
+                    TRY
+                        THIS.addDigital <- CONSTRUCT Digital USING data
+                        transcript := "Digital details correct"
+                    CATCH IllegalArgument ex
+                        transcript := discard + ex.getMessage <- None
+                    END TRY CATCH
+                'C', 'c':
+                    TRY
+                        THIS.addCassette <- CONSTRUCT Cassette USING data
+                        transcript := "Cassette details correct"
+                    CATCH IllegalArgument ex
+                        transcript := discard + ex.getMessage <- None
+                    END TRY CATCH
+                DEFAULT:
+                    transcript := discard + "Invalid Music Type."
+            END CASE
+        END IF
+    END
+
+
+
+
+    SUBMODULE: recordsEqual
+    IMPORTS: inRecords (ARRAY OF Records)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF LENGTH OF inRecords = recordNum THEN
+            same := TRUE
+            FOR i := 0 TO recordNum (Exclusive) INC BY 1
+                IF !records[i].equals <- inRecords[i]
+                    same := FALSE
+                END IF
+            END FOR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: digitalsEqual
+    IMPORTS: inDigitals (ARRAY OF Digitals)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF LENGTH OF inDigitals = digitalNum THEN
+            same := TRUE
+            FOR i := 0 TO digitalNum (Exclusive) INC BY 1
+                IF !digitals[i].equals <- inDigitals[i]
+                    same := FALSE
+                END IF
+            END FOR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: cassettesEqual
+    IMPORTS: inCassettes (ARRAY OF Cassettes)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF LENGTH OF inCassettes = cassetteNum THEN
+            same := TRUE
+            FOR i := 0 TO cassetteNum (Exclusive) INC BY 1
+                IF !cassettes[i].equals <- inCassettes[i]
+                    same := FALSE
+                END IF
+            END FOR
+        END IF
+    END
