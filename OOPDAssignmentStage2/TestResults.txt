@@ -1,0 +1,439 @@
+Program: MusicLibrary.java
+Design Date: 26/09/2018
+Test Date:  17/10/2018
+
+Total Tests:
+Tests Passed:
+Tests Failed:
+
+Note: N = user input
+
+TEST RESULTS:
+ID: Category:     Test Data:     Expected Behaviour:       Actual Behaviour:              Pass(P)/Fail(F)
+___________________________________________________________________________________________________________
+1   Provided    ExampleInput_Valid.csv                                                          P
+    Test Files                  Record details  correct     Record details  correct
+                                Digital details  correct    Digital details  correct
+                                Digital details  correct    Digital details  correct
+                                Cassette details  correct   Cassette details  correct
+                                Record details  correct     Record details  correct
+                                Digital details  correct    Digital details  correct
+                                Cassette details  correct   Cassette details  correct
+                                Record details  correct     Record details  correct
+                                Cassette details  correct   Cassette details  correct
+___________________________________________________________________________________________________________
+2   Provided    ExampleInput_Test.csv                                                            P
+    Test Files                  Discarding line 1: Track        Discarding line 1: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 2: Track        Discarding line 2: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 3: Track        Discarding line 3: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 4: Track        Discarding line 4: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 5: Names        Discarding line 5: Names
+                                    cannot be empty.                cannot be empty.
+
+                                Discarding line 6: Invalid      Discarding line 6: Invalid
+                                    Music Type.                     Music Type.
+
+                                Discarding line 7: Invalid      Discarding line 6: Invalid
+                                    Music Type.                     Music Type.
+
+                                Cassette details  correct       Cassette details  correct
+
+                                Discarding line 9: Duration     Discarding line 9: Duration
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 9.59            between 0.0 and 9.59
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+                                Discarding line 10: Invalid     Discarding line 10: Invalid
+                                    number of comma                 number of comma
+                                    seperated values.               seperated values.
+
+                                Discarding line 11: Invalid     Discarding line 11: Invalid
+                                    number of comma                 number of comma
+                                    seperated values.               seperated values.
+
+                                Discarding line 12: Track       Discarding line 12: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 13: Track       Discarding line 13: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Record details  correct         Record details  correct
+
+                                Discarding line 15: Track       Discarding line 15: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 16:             Discarding line 16:
+                                    Duration must be a              Duration must be a
+                                    valid time between 0.0          valid time between 0.0
+                                    and 9.59 inclusive.             and 9.59 inclusive.
+                                    Check documentation.txt         Check documentation.txt
+                                    for more information.           for more information.
+
+                                Discarding line 17:             Discarding line 17:
+                                    Duration must be a              Duration must be a
+                                    valid time between 0.0          valid time between 0.0
+                                    and 9.59 inclusive.             and 9.59 inclusive.
+                                    Check documentation.txt         Check documentation.txt
+                                    for more information.           for more information.
+
+                                Digital details  correct        Digital details  correct
+
+                                Cassette details  correct       Cassette details  correct
+
+                                Record details  correct         Record details  correct
+
+                                Discarding line 21: The         Discarding line 21: The
+                                    only supported digital          only supported digital
+                                    music file types are            music file types are
+                                    'wav', 'mp3', and               'wav', 'mp3', and
+                                    'acc'. Check                    'acc'. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+                                Record details  correct         Record details  correct
+
+                                Cassette details  correct       Cassette details  correct
+
+                                Discarding line 24: Invalid     Discarding line 24: Invalid
+                                    Music Type.                     Music Type.
+
+                                Discarding line 25: Invalid     Discarding line 25: Invalid
+                                    number of comma                 number of comma
+                                    seperated values.               seperated values.
+
+                                Digital details  correct        Digital details  correct
+
+                                Digital details  correct        Digital details  correct
+
+                                Discarding line 28: Track       Discarding line 28: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 29: Track       Discarding line 29: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 30: Track       Discarding line 30: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Record details  correct         Record details  correct
+
+                                Discarding line 32: Track       Discarding line 32: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Digital details  correct        Digital details  correct
+
+                                Discarding line 34: Track       Discarding line 34: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+                                Discarding line 35: The         Discarding line 35: The
+                                    only supported play             only supported play
+                                    speeds are                      speeds are
+                                    '33 1/3 RPM', '45 RPM',         '33 1/3 RPM', '45 RPM',
+                                    and '78 RPM'. Check             and '78 RPM'. Check
+                                    documentation.txt               documentation.txt
+                                    for more information.           for more information.
+
+                                Discarding line 36: Invalid     Discarding line 36: Invalid
+                                    Music Type.                     Music Type.
+___________________________________________________________________________________________________________
+3   Menu Invalid    N=0         Please enter an integer         Please enter an integer         P
+        Lower Invalid               between 1 and 7 inclusive.      between 1 and 7 inclusive.
+___________________________________________________________________________________________________________
+4   Menu Invalid    N=8         Please enter an integer         Please enter an integer         P
+        Upper Invalid               between 1 and 7 inclusive.      between 1 and 7 inclusive.
+___________________________________________________________________________________________________________
+5   Menu            N=qwerty    Please enter an integer         Please enter an integer         P
+        Invalid Type                between 1 and 7 inclusive.      between 1 and 7 inclusive.
+___________________________________________________________________________________________________________
+6   Menu            N=4         Searching for a specific song   Searching for a specific song   P
+        Not Implemented             is not yet implemented.         is not yet implemented.
+___________________________________________________________________________________________________________
+7   Menu            N=7         "Goodbye." + Exit to terminal   "Goodbye." + Exit to terminal   P
+        Exit
+___________________________________________________________________________________________________________
+8   Media Search    N=5         Please enter an integer         Please enter an integer         P
+        Menu-       N=qwerty        between 1 and 4 inclusive.      between 1 and 4 inclusive.
+    Invalid Type
+___________________________________________________________________________________________________________
+9   Media Search    N=5         Please enter an integer         Please enter an integer         P
+        Menu-       N=0             between 1 and 4 inclusive.      between 1 and 4 inclusive.
+    Lower Invalid
+___________________________________________________________________________________________________________
+10  Media Search    N=5         Please enter an integer         Please enter an integer         P
+        Menu-       N=5             between 1 and 4 inclusive.      between 1 and 4 inclusive.
+    Upper Invalid
+___________________________________________________________________________________________________________
+11  Media Search    N=5         Exit to top level menu.         Exit to top level menu.         P
+        Menu-       N=4
+    Exit
+___________________________________________________________________________________________________________
+12  Media Search    N=5         Please enter an integer         Please enter an integer         P
+        Menu-       N=1             between 1 and 4 inclusive.      between 1 and 4 inclusive.
+    Invalid Type    N=qwerty
+___________________________________________________________________________________________________________
+13  Media Search    N=5         Please enter an integer         Please enter an integer         P
+        Menu-       N=1             between 1 and 4 inclusive.      between 1 and 4 inclusive.
+    Lower Invalid   N=0
+___________________________________________________________________________________________________________
+14  Media Search    N=5         Please enter an integer         Please enter an integer         P
+        Menu-       N=1             between 1 and 4 inclusive.      between 1 and 4 inclusive.
+    Upper Invalid   N=5
+___________________________________________________________________________________________________________
+15  Media Search    N=5         Exit to top level menu.         Exit to top level menu.         P
+        Menu-       N=1
+    Exit            N=4
+___________________________________________________________________________________________________________
+16  Media Search    N=5         Finding the number of songs     Finding the number of songs     P
+        Menu-       N=1             and total run time of a         and total run time of a
+    Not Implemented N=1             given media type is not         given media type is not
+                                    yet implemented.                yet implemented.
+___________________________________________________________________________________________________________
+17  File Input      qwerty.csv  This file does not exist.       This file does not exist.       P
+        Doesnt Exist                + re-prompt                     + re-prompt
+___________________________________________________________________________________________________________
+18  File Input      .           Cannot write to a               Cannot write to a               P
+        Is a Directory              directory name.                 directory name.
+                                    + re-prompt                     + re-prompt
+___________________________________________________________________________________________________________
+19  File Input      empty.csv   Discarding file: Empty File.    Discarding file: Empty File.    P
+        Empty
+___________________________________________________________________________________________________________
+20  File Output     .           Cannot write to a               Cannot write to a               P
+        Is a Directory              directory name.                 directory name.
+___________________________________________________________________________________________________________
+21  File Output     write.txt   Overwrite Prompt +              Overwrite Prompt +              P
+        Already Exists              "Invalid Input."                "Invalid Input."
+        Invalid         N=0         "Please try again."            "Please try again."
+___________________________________________________________________________________________________________
+22  File Output     write.txt   Overwrite Prompt +              Overwrite Prompt +              P
+        Already Exists              Re-Prompt                       Re-Prompt
+        No              N=n
+___________________________________________________________________________________________________________
+23  File Output     write.txt   Terminal Output:                Terminal Output:                P
+        Valid       N=y         "Library has been " +           "Library has been " +
+                                    "written to file"               "written to file"
+                                File Output:                    File Output:
+                                Data storage not yet            Data storage not yet
+                                    implemented.                    implemented.
+                                This is a test file.            This is a test file.
+                                To ensure the output            To ensure the output
+                                    is correctly printed.           is correctly printed.
+___________________________________________________________________________________________________________
+24  Validation      validation.csv                                                              P
+        Empty Row               Discarding line 1: Empty        Discarding line 1: Empty
+                                    CSV Row.                        CSV Row.
+
+        1 column                Discarding line 2: Invalid      Discarding line 2: Invalid
+                                    number of comma seperated       number of comma seperated
+                                    values.                         values.
+
+        Invalid Type            Discarding line 3: Invalid      Discarding line 3: Invalid
+                                    Music Type.                     Music Type.
+
+        Empty Name              Discarding line 4: Names        Discarding line 4: Names
+                                    cannot be empty.                cannot be empty.
+
+        Empty Artist            Discarding line 5: Artist       Discarding line 5: Artist
+                                    names cannot be empty.          names cannot be empty.
+
+        Invalid Duration Type   Discarding line 6: Duration     Discarding line 6: Duration
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 9.59            between 0.0 and 9.59
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Minimum Duration        Record details  correct         Record details  correct
+
+        Maximum Duration        Digital details  correct        Digital details  correct
+
+        Too large Duration      Discarding line 9: Duration     Discarding line 9: Duration
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 9.59            between 0.0 and 9.59
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Too small Duration      Discarding line 10: Duration    Discarding line 10: Duration
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 9.59            between 0.0 and 9.59
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Invalid seconds         Discarding line 11: Duration    Discarding line 11: Duration
+            Duration                must be a valid time            must be a valid time
+                                    between 0.0 and 9.59            between 0.0 and 9.59
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+
+        Invalid Track Number    Discarding line 12: Track       Discarding line 12: Track
+            Type                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+
+        Minimum Track Number    Record details  correct         Record details  correct
+
+        Maximum Track Number    Record details  correct         Record details  correct
+
+        Too large Track Number  Discarding line 15: Track       Discarding line 15: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+        Too small Track Number  Discarding line 16: Track       Discarding line 16: Track
+                                    number must be a valid          number must be a valid
+                                    integer between 0 and           integer between 0 and
+                                    20 inclusive.                   20 inclusive.
+
+        Invalid Speed           Discarding line 17: The only    Discarding line 17: The only
+                                    supported play speeds are       supported play speeds are
+                                    '33 1/3 RPM', '45 RPM',         '33 1/3 RPM', '45 RPM',
+                                    and '78 RPM'. Check             and '78 RPM'. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Invalid Digital Music   Discarding line 18: The only    Discarding line 18: The only
+            Type                    supported digital music         supported digital music
+                                    file types are 'wav',           file types are 'wav',
+                                    'mp3', and 'acc'. Check         'mp3', and 'acc'. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+
+        Invalid Start Time Type Discarding line 19: Start time  Discarding line 19: Start time
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 160.0           between 0.0 and 160.0
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Minimum Start Time      Cassette details  correct       Cassette details  correct
+
+        Maximum Start Time      Cassette details  correct       Cassette details  correct
+
+        Too large Start Time    Discarding line 22: Start time  Discarding line 22: Start time
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 160.0           between 0.0 and 160.0
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Too small Start Time    Discarding line 23: Start time  Discarding line 23: Start time
+                                    must be a valid time            must be a valid time
+                                    between 0.0 and 160.0           between 0.0 and 160.0
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Invalid Seconds Start   Discarding line 24: Start time  Discarding line 24: Start time
+            Time                    must be a valid time            must be a valid time
+                                    between 0.0 and 160.0           between 0.0 and 160.0
+                                    inclusive. Check                inclusive. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+
+        Invalid Side            Discarding line 25: The only    Discarding line 25: The only
+                                    supported cassette sides        supported cassette sides
+                                    are 'A' and 'B'. Check          are 'A' and 'B'. Check
+                                    documentation.txt for           documentation.txt for
+                                    more information.               more information.
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Valid Record            Record details  correct         Record details  correct
+
+        Too Many Records        Discarding line 33: Maximum     Discarding line 33: Maximum
+                                    number of records (10)          number of records (10)
+                                    has been reached.               has been reached.
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Valid Digital           Digital details  correct        Digital details  correct
+
+        Too Many Digitals       Discarding line 43: Maximum     Discarding line 43: Maximum
+                                    number of digital music         number of digital music
+                                    files (10)  has been            files (10)  has been
+                                    reached.                        reached.
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Valid Cassette          Cassette details  correct       Cassette details  correct
+
+        Too Many Cassettes      Discarding line 52: Maximum     Discarding line 52: Maximum
+                                    number of cassettes (10)        number of cassettes (10)
+                                    has been reached.               has been reached.
+___________________________________________________________________________________________________________
