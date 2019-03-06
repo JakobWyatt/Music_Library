@@ -1,0 +1,422 @@
+// FILE: Digital_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class to contain digitals.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 16/10/2018
+// Modification history:
+//  None
+
+CLASS Digital
+
+    CLASS CONSTANTS:
+
+    //public class constants
+    //all valid ranges are represented in the form [min, max)
+    DURATION_MIN := 0.01
+    DURATION_MAX := 9.60
+    SECOND_MAX := 60
+
+    NAME_ERROR := "Names cannot be empty."
+    ARTIST_ERROR := "Artist names " +
+        "cannot be empty."
+    DURATION_ERROR := "Duration must be a valid " +
+        "time between 0.0 and 9.59 inclusive. " +
+        "Check documentation.txt for more information."
+    TYPE_ERROR := "The only supported digital " +
+        "music file types are 'wav', 'mp3', and 'acc'. " +
+        "Check documentation.txt for more information."
+
+
+
+
+    PRIVATE CLASS CONSTANTS:
+
+    TYPE_VALID (ARRAY OF String) := { "wav", "mp3",
+        "acc" }
+
+
+
+
+    CLASS FIELDS:
+
+    name (String)
+    artist (String)
+    duration (Real)
+    type (String)
+
+
+
+    PUBLIC SUBMODULES:
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        name := "a"
+        artist := "a"
+        duration := 0.01
+        type = TYPE_VALID[0]
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inDigital (Digital)
+    EXPORT:
+    ALGORITHM:
+        IF inDigital = NULL THEN
+            THROW IllegalArgument <- "Invalid Digital."
+        END IF
+        name := inDigital.getName <- None
+        artist := inDigital.getArtist <- None
+        duration := inDigital.getDuration <- None
+        type := inDigital.getType <- None
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR:
+    IMPORTS: inName (String), inArtist (String), inDuration (String),
+        inType (String)
+    EXPORT:
+    ALGORITHM:
+        IF inType = NULL THEN
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+        inTypeLower := inType.toLowerCase <- None
+
+        validateDigital <- inName, inArtist, inDuration,
+            inTypeLower
+
+        name := inName
+        artist := inArtist
+        duration := inDuration
+        type := inTypeLower
+    END
+
+
+
+
+    CSV CONSTRUCTOR
+    IMPORTS: csv (String)
+    EXPORT:
+    ALGORITHM:
+        parseError = "";
+
+        //ensure that we can read from the csv data
+        IF csv = NULL THEN
+            THROW IllegalArgument <- "CSV data cannot be null."
+        END IF
+
+        data = csv.split <- ","
+        //ensure that we will not get any
+        //  exceptions when accessing array elements.
+        IF LENGTH OF data != 5 THEN
+            THROW IllegalArgument <-
+                "Incorrect number of columns."
+        END
+        IF !( data[0].equals <- "D" OR data[0].equals <- "d" THEN
+            THROW IllegalArgument <- "Incorrect music type."
+        END IF
+        //ensure that the numbers are convertable.
+        TRY
+            inDuration := Double.parseDouble <- data[3]
+        CATCH NumberFormat ex
+            THROW IllegalArgument <- DURATION_ERROR
+        END TRY CATCH
+
+        inTypeLower := data[4].toLowerCase <- None
+
+        validateDigital <- data[1], data[2], inDuration, inTypeLower
+
+        name := data[1]
+        artist := data[2]
+        duration := inDuration
+        type := inTypeLower
+    END
+
+
+
+
+    SUBMODULE: getName
+    IMPORTS: None
+    EXPORT: name (String)
+    ALGORITHM:
+        name
+    END
+
+
+
+
+    SUBMODULE: getArtist
+    IMPORTS: None
+    EXPORT: artist (String)
+    ALGORITHM:
+        artist
+    END
+
+
+
+
+    SUBMODULE: getDuration
+    IMPORTS: None
+    EXPORT: duration (Real)
+    ALGORITHM:
+        duration
+    END
+
+
+
+
+    SUBMODULE: getType
+    IMPORTS: None
+    EXPORT: type (String)
+    ALGORITHM:
+        type
+    END
+
+
+
+
+    SUBMODULE: setName
+    IMPORTS: inName (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            THROW IllegalArgument <- NAME_ERROR
+        END IF
+        name := inName
+    END
+
+
+
+
+    SUBMODULE: setArtist
+    IMPORTS: inArtist (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateArtist <- inArtist THEN
+            THROW IllegalArgument <- ARTIST_ERROR
+        END IF
+        artist := inArtist
+    END
+
+
+
+
+    SUBMODULE: setDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateDuration <- inDuration THEN
+            THROW IllegalArgument <- DURATION_ERROR
+        END IF
+        duration := inDuration
+    END
+
+
+
+
+    SUBMODULE: setType
+    IMPORTS: inType (String)
+    EXPORT: None
+    ALGORITHM:
+        IF inType = NULL
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+        inTypeLower := inType.toLowerCase <- None
+        IF !validateType <- inTypeLower THEN
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+        type := inTypeLower
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE;
+        IF inObj INSTANCEOF Digital THEN
+            inDigital := (Convert to Digital)inObj;
+            same =  (inDigital.getName <- None).equals <- name AND
+                    (inDigital.getName <- None).equals <- artist AND
+                    inDigital.getDuration <- None = duration AND
+                    (inDigital.getType <- None).equals <- type
+        END IF
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORTS: digitalClone (Digital)
+    ALGORITHM:
+        digitalClone := CONSTRUCT Digital USING THIS
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: digitalString (String)
+    ALGORITHM:
+        digitalString := "name: " + name + ", artist: " + artist +
+            ", duration: " + duration + ", type: " + type
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (String)
+    ALGORITHM:
+        output := "D," + name + "," + artist + "," +
+            duration (2 Decimal Places) + "," + type
+    END
+
+
+
+
+    SUBMODULE: search
+    IMPORTS: inType (String)
+    EXPORT: exists (Boolean)
+    ALGORITHM:
+        exists := FALSE
+        IF inType != NULL THEN
+            exists := (inType.toLowerCase <- None).equals <- type
+        END IF
+    END
+
+
+
+
+    SUBMODULE: play
+    IMPORTS: None
+    EXPORT: playString (String)
+    ALGORITHM:
+        playString := name + " requires the " + type +
+            " codec to play."
+    END
+
+
+
+
+    SUBMODULE: addDuration
+    IMPORTS: duration (Real)
+    EXPORT: durationSum (Real)
+    ALGORITHM:
+        minutes := (Convert to Integer)duration +
+            (Convert to Integer)inDuration
+        seconds :=   (Convert to Integer)( duration x 100.0 ) MOD 100 +
+                    (Convert to Integer)( inDuration x 100.0 ) MOD 100
+        minutes := minutes + seconds DIV 60
+        seconds := seconds MOD 60
+
+        durationSum := (Convert to Real)minutes + (double)seconds / 100.0
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: validateDigital
+    IMPORTS: inName (String), inArtist (String), inDuration (Real),
+        inTrackNumber (Integer), inType (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            THROW IllegalArgument <- NAME_ERROR
+        END IF
+        IF !validateArtist <- inArtist THEN
+            THROW IllegalArgument <- ARTIST_ERROR
+        END IF
+        IF !validateDuration <- inDuration THEN
+            THROW IllegalArgument <- DURATION_ERROR
+        END IF
+        IF !validateType <- inType THEN
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateName
+    IMPORTS: inName (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inName
+    END
+
+
+
+
+    SUBMODULE: validateArtist
+    IMPORTS: inArtist (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inArtist
+    END
+
+
+
+
+    SUBMODULE: validateDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        seconds := (Convert to Integer)( inDuration x 100.0 ) MOD 100
+
+        IF inDuration < DURATION_MIN OR inDuration >= DURATION_MAX THEN
+            valid := false
+        END IF
+        IF seconds < 0 OR seconds >= SECOND_MAX THEN
+            valid := false
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateType
+    IMPORTS: inType (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := FALSE
+        FOR i := 0 TO LENGTH OF TYPE_VALID (Exclusive) INC BY 1
+            IF TYPE_VALID[i].equals <- inType THEN
+                valid := TRUE
+            END IF
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: nullOrEmpty
+    IMPORTS: x (String)
+    EXPORT: isNullOrEmpty (Boolean)
+    ALGORITHM:
+        isNullOrEmpty := FALSE
+        IF x = NULL THEN
+            isNullOrEmpty := TRUE
+        ELSE
+            IF LENGTH OF x = 0 THEN
+                isNullOrEmpty := TRUE
+            END IF
+        END IF
+    END
