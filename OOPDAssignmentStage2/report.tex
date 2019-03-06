@@ -1,0 +1,70 @@
+\documentclass{article}
+
+\begin{document}
+\begin{center}
+    \Huge
+    OOPD Assignment Stage 2 Report\\
+    \large
+    Jakob Wyatt\\
+    19477143
+\end{center}
+
+For the purposes of this document, a "client" is defined as the programmer
+using a class. A "user" is defined as the person using the final program.
+
+\section{Justification of Container Class Functionality}
+There were three container classes used in this project:
+Digital, Cassette, and Record. There was also one controller class,
+MusicCollection, which managed arrays of these three classes.\\
+All functionality, where possible, was added to the container classes.
+However, there were three notable exceptions to this.\\
+The first is when user IO was required. All user IO
+was done within the UserInterface
+class, with the container classes returning strings rather than printing
+the values themselves. The advantage of this approach is that it is more
+flexible, as the client can determine if the values are output to the user,
+logged, used for debugging, or output to a file. Another advantage of this
+approach is that it helps guarentee that class methods cause no side-effects
+outside of the class. This is useful to the client, as it makes it easier
+to code when side effects do not need to be considered.\\
+The second is when file IO was required. All file IO was done within the
+FileManager class, which was called by UserInterface to read from and 
+write to files. Any file data was passed in and out of the container classes
+via string arrays. This was done for the same reasons as mentioned above, 
+as it improves flexibility and decreases side-effects within a class.\\
+The third is when multiple instances of the same class must be used.
+An example of this is duration (within MusicCollection),
+which uses arrays of Music objects to find the total duration of the library.
+This functionality is not implemented within the container classes,
+as it requires the container classes to assume how the client stores their
+data. Although arrays are the only storage mechanism in this progam,
+container storage classes such as ArrayList are frequently used
+in other java code. A way around this is to use the Iterable interface;
+however, this is outside of the scope of this unit, and incompatible with
+arrays.
+
+\section{Issues with Object Arrays}
+The main issue that was encountered while using object arrays was
+ensuring that object arrays could not be modified without the knowledge of
+the class. This was done by cloning every object either entering or exiting
+the object, and using or returning the cloned object instead. This ensures
+that the object cannot be modified, however, it complicates program structure
+and makes some code slower, as cloning is not as fast as passing an object
+reference. A way around this is to make the container classes immutable;
+however, this is not allowed in this unit.
+
+\section{Issues with Managing three Arrays}
+The main issue with managing three seperate arrays was the massive amount of
+code duplication required. Instead of looping through all Music objects at
+once, three loops had to be implemented, with one per array. This increased
+the amount of code, and therefore the potential for bugs. It also made
+the code more difficult to read,
+as it was difficult to identify the important
+sections of a method. It would be simpler to use a single array, as
+looping through all Music objects would only require one for loop. It would
+also reduce the number of member functions in the controller class,
+as a superclass type could be returned rather than three seperate methods
+doing the same thing. This could be achieved via inheritance, which is used
+in Stage 3 of the assignment.
+
+\end{document}
