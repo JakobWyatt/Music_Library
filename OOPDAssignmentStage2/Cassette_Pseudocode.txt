@@ -1,0 +1,535 @@
+// FILE: Cassette_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class to contain cassettes.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 16/10/2018
+// Modification history:
+//  None
+
+CLASS Cassette
+
+    CLASS CONSTANTS:
+
+    //public class constants
+    //all valid ranges are represented in the form [min, max)
+    TRACK_NUMBER_MIN := 0
+    TRACK_NUMBER_MAX := 21
+    DURATION_MIN := 0.01
+    DURATION_MAX := 9.60
+    START_TIME_MIN := 0.0
+    START_TIME_MAX := 160.01
+    SECOND_MAX := 60
+
+    NAME_ERROR := "Names cannot be empty."
+    ARTIST_ERROR := "Artist names " +
+        "cannot be empty."
+    DURATION_ERROR := "Duration must be a valid " +
+        "time between 0.0 and 9.59 inclusive. " +
+        "Check documentation.txt for more information."
+    TRACK_NUMBER_ERROR := "Track number " +
+        "must be a valid integer between 0 and 20 inclusive."
+    START_TIME_ERROR := "Start time must be a " +
+        "valid time between 0.0 and 160.0 inclusive. " +
+        "Check documentation.txt for more information."
+    SIDE_ERROR  := "The only supported cassette " +
+        "sides are 'A' and 'B'. " +
+        "Check documentation.txt for more information."
+
+
+
+
+    PRIVATE CLASS CONSTANTS:
+
+    SIDE_VALID (ARRAY OF Character) := { 'A', 'B' }
+
+
+
+
+    CLASS FIELDS:
+
+    name (String)
+    artist (String)
+    duration (Real)
+    trackNumber (Integer)
+    startTime (Real)
+    side (Character)
+
+
+
+    PUBLIC SUBMODULES:
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        name := "a"
+        artist := "a"
+        duration := 0.01
+        trackNumber := 0
+        startTime := 0.0
+        side := SIDE_VALID[0]
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inCassette (Cassette)
+    EXPORT:
+    ALGORITHM:
+        IF inCassette = NULL THEN
+            THROW IllegalArgument <- "Invalid Cassette."
+        END IF
+        name := inCassette.getName <- None
+        artist := inCassette.getArtist <- None
+        duration := inCassette.getDuratio n<- None
+        trackNumber := inCassette.getTrackNumber <- None
+        startTime := inCassette.getStartTime <- None
+        side := inCassette.getSide <- None
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR:
+    IMPORTS: inName (String), inArtist (String), inDuration (String),
+        inTrackNumber (Integer), inStartTime (Real), inSide (Character)
+    EXPORT:
+    ALGORITHM:
+        inSideUpper := Character.toUpperCase <- inSide
+
+        validateCassette <- inName, inArtist, inDuration,
+            inTrackNumber, inStartTime, inSideUpper
+
+        name := inName
+        artist := inArtist
+        duration := inDuration
+        trackNumber := inTrackNumber
+        startTime := inStartTime
+        side := inSideUpper
+    END
+
+
+
+
+    CSV CONSTRUCTOR
+    IMPORTS: csv (String)
+    EXPORT:
+    ALGORITHM:
+        parseError = "";
+
+        //ensure that we can read from the csv data
+        IF csv = NULL THEN
+            THROW IllegalArgument <- "CSV data cannot be null."
+        END IF
+
+        data = csv.split <- ","
+        //ensure that we will not get any
+        //  exceptions when accessing array elements.
+        IF LENGTH OF data != 7 THEN
+            THROW IllegalArgument <-
+                "Incorrect number of columns."
+        END
+        IF !( data[0].equals <- "C" OR data[0].equals <- "c" THEN
+            THROW IllegalArgument <- "Incorrect music type."
+        END IF
+        //ensure that the numbers are convertable.
+        TRY
+            parseError := DURATION_ERROR
+            inDuration := Double.parseDouble <- data[3]
+            parseError := TRACK_NUMBER_ERROR
+            inTrackNumber := Integer.parseInt <- data[4]
+            parseError := START_TIME_ERROR
+            inStartTime := Double.parseDouble <- data[5]
+        CATCH NumberFormat ex
+            THROW IllegalArgument <- parseError
+        END TRY CATCH
+
+        //ensure that the side is convertable to a char
+        IF LENGTH OF data[6] != 1 THEN
+            THROW IllegalArgument <- SIDE_ERROR
+        END IF
+        inSideUpper := Character.toUpperCase <- data[6].charAt <- 0
+
+        validateCassette <- data[1], data[2], inDuration, inTrackNumber,
+            inStartTime, inSideUpper
+
+        name := data[1]
+        artist := data[2]
+        duration := inDuration
+        trackNumber := inTrackNumber
+        startTime := inStartTime
+        side := inSideUpper
+    END
+
+
+
+
+    SUBMODULE: getName
+    IMPORTS: None
+    EXPORT: name (String)
+    ALGORITHM:
+        name
+    END
+
+
+
+
+    SUBMODULE: getArtist
+    IMPORTS: None
+    EXPORT: artist (String)
+    ALGORITHM:
+        artist
+    END
+
+
+
+
+    SUBMODULE: getDuration
+    IMPORTS: None
+    EXPORT: duration (Real)
+    ALGORITHM:
+        duration
+    END
+
+
+
+
+    SUBMODULE: getTrackNumber
+    IMPORTS: None
+    EXPORT: trackNumber (Integer)
+    ALGORITHM:
+        trackNumber
+    END
+
+
+
+
+    SUBMODULE: getStartTime
+    IMPORTS: None
+    EXPORT: startTime (Real)
+    ALGORITHM:
+        startTime
+    END
+
+
+
+
+    SUBMODULE: getSide
+    IMPORTS: None
+    EXPORT: side (Character)
+    ALGORITHM:
+        side
+    END
+
+
+
+
+    SUBMODULE: setName
+    IMPORTS: inName (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            THROW IllegalArgument <- NAME_ERROR
+        END IF
+        name := inName
+    END
+
+
+
+
+    SUBMODULE: setArtist
+    IMPORTS: inArtist (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateArtist <- inArtist THEN
+            THROW IllegalArgument <- ARTIST_ERROR
+        END IF
+        artist := inArtist
+    END
+
+
+
+
+    SUBMODULE: setDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateDuration <- inDuration THEN
+            THROW IllegalArgument <- DURATION_ERROR
+        END IF
+        duration := inDuration
+    END
+
+
+
+
+    SUBMODULE: setTrackNumber
+    IMPORTS: inTrackNumber (Integer)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateTrackNumber <- inTrackNumber THEN
+            THROW IllegalArgument <- TRACK_NUMBER_ERROR
+        END IF
+        trackNumber := inTrackNumber
+    END
+
+
+
+
+    SUBMODULE: setStartTime
+    IMPORTS: inStartTime (Real)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateStartTime <- inStartTime THEN
+            THROW IllegalArgument <- START_TIME_ERROR
+        END IF
+        startTime := inStartTime
+    END
+
+
+
+
+    SUBMODULE: setSide
+    IMPORTS: inSide (Character)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateSide <- inSide THEN
+            THROW IllegalArgument <- SIDE_ERROR
+        END IF
+        side := inSide
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE;
+        IF inObj INSTANCEOF Cassette THEN
+            inCassette := (Convert to Cassette)inObj;
+            same =  (inCassette.getName <- None).equals <- name AND
+                    (inCassette.getName <- None).equals <- artist AND
+                    inCassette.getDuration <- None = duration AND
+                    inCassette.getTrackNumber <- None = trackNumber AND
+                    inCassette.getStartTime <- None = startTime AND
+                    inCassette.getSide <- None = side;
+        END IF
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORTS: cassetteClone (Cassette)
+    ALGORITHM:
+        cassetteClone := CONSTRUCT Cassette USING THIS
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: cassetteString (String)
+    ALGORITHM:
+        cassetteString := "name: " + name + ", artist: " + artist +
+            ", duration: " + duration + ", track number: " + trackNumber +
+            ", start time: " + startTime + ", side: " + side
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (String)
+    ALGORITHM:
+         output := "C," + name + "," + artist + "," +
+            duration (2 Decimal Places) + "," +
+            trackNumber + "," + startTime (2 Decimal Places)
+            + "," + side
+    END
+
+
+
+
+    SUBMODULE: search
+    IMPORTS: inSide (String)
+    EXPORT: exists (Boolean)
+    ALGORITHM:
+        exists := FALSE
+        IF inSide != NULL THEN
+            IF LENGTH OF inSide = 1 THEN
+                exists := side = (inSide.toUpperCase <- None).charAt <- 0
+            END IF
+        END IF
+    END
+
+
+
+
+    SUBMODULE: play
+    IMPORTS: None
+    EXPORT: playString (String)
+    ALGORITHM:
+        playString := name + " is track number " + trackNumber +
+            ", it starts at " + startTime (2 Decimal Places) +
+            " minutes, on side " + side + "."
+    END
+
+
+
+
+    SUBMODULE: addDuration
+    IMPORTS: duration (Real)
+    EXPORT: durationSum (Real)
+    ALGORITHM:
+        minutes := (Convert to Integer)duration +
+            (Convert to Integer)inDuration
+        seconds :=   (Convert to Integer)( duration x 100.0 ) MOD 100 +
+                    (Convert to Integer)( inDuration x 100.0 ) MOD 100
+        minutes := minutes + seconds DIV 60
+        seconds := seconds MOD 60
+
+        durationSum := (Convert to Real)minutes + (double)seconds / 100.0
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: validateCassette
+    IMPORTS: inName (String), inArtist (String), inDuration (Real),
+        inTrackNumber (Integer), inStartTime (Real), inSide (Character)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            THROW IllegalArgument <- NAME_ERROR
+        END IF
+        IF !validateArtist <- inArtist THEN
+            THROW IllegalArgument <- ARTIST_ERROR
+        END IF
+        IF !validateDuration <- inDuration THEN
+            THROW IllegalArgument <- DURATION_ERROR
+        END IF
+        IF !validateTrackNumber <- inTrackNumber THEN
+            THROW IllegalArgument <- TRACK_NUMBER_ERROR
+        END IF
+        IF !validateStartTime <- inStartTime THEN
+            THROW IllegalArgument <- START_TIME_ERROR
+        END IF
+        IF !validateSide <- inSide THEN
+            THROW IllegalArgument <- SIDE_ERROR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateName
+    IMPORTS: inName (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inName
+    END
+
+
+
+
+    SUBMODULE: validateArtist
+    IMPORTS: inArtist (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inArtist
+    END
+
+
+
+
+    SUBMODULE: validateDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        seconds := (Convert to Integer)( inDuration x 100.0 ) MOD 100
+
+        IF inDuration < DURATION_MIN OR inDuration >= DURATION_MAX THEN
+            valid := false
+        END IF
+        IF seconds < 0 OR seconds >= SECOND_MAX THEN
+            valid := false
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateTrackNumber
+    IMPORTS: inTrackNumber (Integer)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        IF inTrackNumber < TRACK_NUMBER_MIN OR
+            inTrackNumber >= TRACK_NUMBER_MAX THEN
+            valid := FALSE
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateStartTime
+    IMPORTS: inStartTime (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        seconds := (Convert to Integer)( inStartTime x 100.0 ) MOD 100
+
+        IF inStartTime < START_TIME_MIN OR inStartTime >= START_TIME_MAX THEN
+            valid := FALSE;
+        END IF
+        IF seconds < 0 OR seconds >= SECOND_MAX THEN
+            valid := FALSE;
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateSide
+    IMPORTS: inSide (Character)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := FALSE
+        FOR i := 0 TO LENGTH OF SIDE_VALID (Exclusive) INC BY 1
+            IF inSide = SIDE_VALID[i] THEN
+                valid := TRUE
+            END IF
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: nullOrEmpty
+    IMPORTS: x (String)
+    EXPORT: isNullOrEmpty (Boolean)
+    ALGORITHM:
+        isNullOrEmpty := FALSE
+        IF x = NULL THEN
+            isNullOrEmpty := TRUE
+        ELSE
+            IF LENGTH OF x = 0 THEN
+                isNullOrEmpty := TRUE
+            END IF
+        END IF
+    END
