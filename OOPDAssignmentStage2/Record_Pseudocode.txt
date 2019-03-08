@@ -1,0 +1,478 @@
+// FILE: Record_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class to contain records.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 16/10/2018
+// Modification history:
+//  None
+
+CLASS Record
+
+    CLASS CONSTANTS:
+
+    //public class constants
+    //all valid ranges are represented in the form [min, max)
+    TRACK_NUMBER_MIN := 0
+    TRACK_NUMBER_MAX := 21
+    DURATION_MIN := 0.01
+    DURATION_MAX := 9.60
+    SECOND_MAX := 60
+
+    NAME_ERROR := "Names cannot be empty."
+    ARTIST_ERROR := "Artist names " +
+        "cannot be empty."
+    DURATION_ERROR := "Duration must be a valid " +
+        "time between 0.0 and 9.59 inclusive. " +
+        "Check documentation.txt for more information."
+    TRACK_NUMBER_ERROR := "Track number " +
+        "must be a valid integer between 0 and 20 inclusive."
+    PLAY_SPEED_ERROR := "The only supported " +
+        "play speeds are '33 1/3 RPM', '45 RPM', and '78 RPM'. " +
+        "Check documentation.txt for more information."
+
+
+
+
+    PRIVATE CLASS CONSTANTS:
+
+    PLAY_SPEED_VALID (ARRAY OF String) := { "33 1/3 RPM", "45 RPM",
+        "78 RPM" }
+
+
+
+
+    CLASS FIELDS:
+
+    name (String)
+    artist (String)
+    duration (Real)
+    trackNumber (Integer)
+    playSpeed (String)
+
+
+
+    PUBLIC SUBMODULES:
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        name := "a"
+        artist := "a"
+        duration := 0.01
+        trackNumber := 0
+        playSpeed := PLAY_SPEED_VALID[0]
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inRecord (Record)
+    EXPORT:
+    ALGORITHM:
+        IF inRecord = NULL THEN
+            THROW IllegalArgument <- "Invalid Record."
+        END IF
+        name := inRecord.getName <- None
+        artist := inRecord.getArtist <- None
+        duration := inRecord.getDuratio n<- None
+        trackNumber := inRecord.getTrackNumber <- None
+        playSpeed := inRecord.getPlaySpeed <- None
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR:
+    IMPORTS: inName (String), inArtist (String), inDuration (String),
+        inTrackNumber (Integer), inPlaySpeed (String)
+    EXPORT:
+    ALGORITHM:
+        IF inPlaySpeed = NULL THEN
+            THROW IllegalArgument <- PLAY_SPEED_ERROR
+        END IF
+        inPlaySpeedUpper := inPlaySpeed.toUpperCase <- None
+
+        validateRecord <- inName, inArtist, inDuration,
+            inTrackNumber, inPlaySpeedUpper
+
+        name := inName
+        artist := inArtist
+        duration := inDuration
+        trackNumber := inTrackNumber
+        playSpeed := inPlaySpeedUpper
+    END
+
+
+
+
+    CSV CONSTRUCTOR
+    IMPORTS: csv (String)
+    EXPORT:
+    ALGORITHM:
+        parseError = "";
+
+        //ensure that we can read from the csv data
+        IF csv = NULL THEN
+            THROW IllegalArgument <- "CSV data cannot be null."
+        END IF
+
+        data = csv.split <- ","
+        //ensure that we will not get any
+        //  exceptions when accessing array elements.
+        IF LENGTH OF data != 6 THEN
+            THROW IllegalArgument <-
+                "Incorrect number of columns."
+        END
+        IF !( data[0].equals <- "R" OR data[0].equals <- "r" THEN
+            THROW IllegalArgument <- "Incorrect music type."
+        END IF
+        //ensure that the numbers are convertable.
+        TRY
+            parseError := DURATION_ERROR
+            inDuration := Double.parseDouble <- data[3]
+            parseError := TRACK_NUMBER_ERROR
+            inTrackNumber := Integer.parseInt <- data[4]
+        CATCH NumberFormat ex
+            THROW IllegalArgument <- parseError
+        END TRY CATCH
+
+        inPlaySpeedUpper := data[5].toUpperCase <- None
+
+        validateRecord <- data[1], data[2], inDuration, inTrackNumber,
+            inPlaySpeedUpper
+
+        name := data[1]
+        artist := data[2]
+        duration := inDuration
+        trackNumber := inTrackNumber
+        playSpeed := inPlaySpeedUpper
+    END
+
+
+
+
+    SUBMODULE: getName
+    IMPORTS: None
+    EXPORT: name (String)
+    ALGORITHM:
+        name
+    END
+
+
+
+
+    SUBMODULE: getArtist
+    IMPORTS: None
+    EXPORT: artist (String)
+    ALGORITHM:
+        artist
+    END
+
+
+
+
+    SUBMODULE: getDuration
+    IMPORTS: None
+    EXPORT: duration (Real)
+    ALGORITHM:
+        duration
+    END
+
+
+
+
+    SUBMODULE: getTrackNumber
+    IMPORTS: None
+    EXPORT: trackNumber (Integer)
+    ALGORITHM:
+        trackNumber
+    END
+
+
+
+
+    SUBMODULE: getPlaySpeed
+    IMPORTS: None
+    EXPORT: playSpeed (String)
+    ALGORITHM:
+        playSpeed
+    END
+
+
+
+
+    SUBMODULE: setName
+    IMPORTS: inName (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            THROW IllegalArgument <- NAME_ERROR
+        END IF
+        name := inName
+    END
+
+
+
+
+    SUBMODULE: setArtist
+    IMPORTS: inArtist (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateArtist <- inArtist THEN
+            THROW IllegalArgument <- ARTIST_ERROR
+        END IF
+        artist := inArtist
+    END
+
+
+
+
+    SUBMODULE: setDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateDuration <- inDuration THEN
+            THROW IllegalArgument <- DURATION_ERROR
+        END IF
+        duration := inDuration
+    END
+
+
+
+
+    SUBMODULE: setTrackNumber
+    IMPORTS: inTrackNumber (Integer)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateTrackNumber <- inTrackNumber THEN
+            THROW IllegalArgument <- TRACK_NUMBER_ERROR
+        END IF
+        trackNumber := inTrackNumber
+    END
+
+
+
+
+    SUBMODULE: setPlaySpeed
+    IMPORTS: inPlaySpeed (String)
+    EXPORT: None
+    ALGORITHM:
+        IF inPlaySpeed = NULL
+            THROW IllegalArgument <- PLAY_SPEED_ERROR
+        END IF
+        inPlaySpeedUpper := inPlaySpeed.toUpperCase <- None
+        IF !validatePlaySpeed <- inPlaySpeedUpper THEN
+            THROW IllegalArgument <- PLAY_SPEED_ERROR
+        END IF
+        playSpeed := inPlaySpeedUpper
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE;
+        IF inObj INSTANCEOF Record THEN
+            inRecord := (Convert to Record)inObj;
+            same =  (inRecord.getName <- None).equals <- name AND
+                    (inRecord.getName <- None).equals <- artist AND
+                    inRecord.getDuration <- None = duration AND
+                    inRecord.getTrackNumber <- None = trackNumber AND
+                    (inRecord.getPlaySpeed <- None).equals <- playSpeed
+        END IF
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORTS: recordClone (Record)
+    ALGORITHM:
+        recordClone := CONSTRUCT Record USING THIS
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: recordString (String)
+    ALGORITHM:
+        recordString := "name: " + name + ", artist: " + artist +
+            ", duration: " + duration + ", track number: " + trackNumber +
+            ", play speed: " + playSpeed
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (String)
+    ALGORITHM:
+        output := "R," + name + "," + artist + "," +
+            duration (2 Decimal Places) + "," +
+            trackNumber + "," + playSpeed
+    END
+
+
+
+
+    SUBMODULE: search
+    IMPORTS: inPlaySpeed (String)
+    EXPORT: exists (Boolean)
+    ALGORITHM:
+        exists := FALSE
+        IF inPlaySpeed != NULL THEN
+            exists := (inPlaySpeed.toUpperCase <- None).equals <- playSpeed
+        END IF
+    END
+
+
+
+
+    SUBMODULE: play
+    IMPORTS: None
+    EXPORT: playString (String)
+    ALGORITHM:
+        playString := name + " is track number " + trackNumber +
+            " and the record is to be played at " + playSpeed + "."
+    END
+
+
+
+
+    SUBMODULE: addDuration
+    IMPORTS: duration (Real)
+    EXPORT: durationSum (Real)
+    ALGORITHM:
+        minutes := (Convert to Integer)duration +
+            (Convert to Integer)inDuration
+        seconds :=   (Convert to Integer)( duration x 100.0 ) MOD 100 +
+                    (Convert to Integer)( inDuration x 100.0 ) MOD 100
+        minutes := minutes + seconds DIV 60
+        seconds := seconds MOD 60
+
+        durationSum := (Convert to Real)minutes + (double)seconds / 100.0
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: validateRecord
+    IMPORTS: inName (String), inArtist (String), inDuration (Real),
+        inTrackNumber (Integer), inPlaySpeed (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            THROW IllegalArgument <- NAME_ERROR
+        END IF
+        IF !validateArtist <- inArtist THEN
+            THROW IllegalArgument <- ARTIST_ERROR
+        END IF
+        IF !validateDuration <- inDuration THEN
+            THROW IllegalArgument <- DURATION_ERROR
+        END IF
+        IF !validateTrackNumber <- inTrackNumber THEN
+            THROW IllegalArgument <- TRACK_NUMBER_ERROR
+        END IF
+        IF !validatePlaySpeed <- inPlaySpeed THEN
+            THROW IllegalArgument <- PLAY_SPEED_ERROR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateName
+    IMPORTS: inName (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inName
+    END
+
+
+
+
+    SUBMODULE: validateArtist
+    IMPORTS: inArtist (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inArtist
+    END
+
+
+
+
+    SUBMODULE: validateDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        seconds := (Convert to Integer)( inDuration x 100.0 ) MOD 100
+
+        IF inDuration < DURATION_MIN OR inDuration >= DURATION_MAX THEN
+            valid := false
+        END IF
+        IF seconds < 0 OR seconds >= SECOND_MAX THEN
+            valid := false
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateTrackNumber
+    IMPORTS: inTrackNumber (Integer)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        IF inTrackNumber < TRACK_NUMBER_MIN OR
+            inTrackNumber >= TRACK_NUMBER_MAX THEN
+            valid := FALSE
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validatePlaySpeed
+    IMPORTS: inPlaySpeed (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := FALSE
+        FOR i := 0 TO LENGTH OF PLAY_SPEED_VALID (Exclusive) INC BY 1
+            IF PLAY_SPEED_VALID[i].equals <- inPlaySpeed THEN
+                valid := TRUE
+            END IF
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: nullOrEmpty
+    IMPORTS: x (String)
+    EXPORT: isNullOrEmpty (Boolean)
+    ALGORITHM:
+        isNullOrEmpty := FALSE
+        IF x = NULL THEN
+            isNullOrEmpty := TRUE
+        ELSE
+            IF LENGTH OF x = 0 THEN
+                isNullOrEmpty := TRUE
+            END IF
+        END IF
+    END
