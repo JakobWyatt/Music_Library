@@ -1,0 +1,383 @@
+// FILE: UserInterface_Pseudocode.java
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Pseudocode for User IO for Music Library.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: FileManager
+// Last Mod: 27/09/2018
+// Modification history:
+//  None
+
+CLASS UserInterface
+
+    PUBLIC SUBMODULES:
+
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT: Address of UserInterface Object
+    ALGORITHM:
+        END
+
+
+
+
+    SUBMODULE: menu
+    IMPORTS: None
+    EXPORT: None
+    ALGORITHM:
+        option := 0
+        library := CONSTRUCT MusicCollection USING None
+        prompt := "\n 1: Add songs to your library.\n" +
+                "2: Find the total duration of music in your library.\n" +
+                "3: Print all play instructions for your entire library.\n" +
+                "4: Print the play instructions for a specific song.\n" +
+                "5: Find the number of songs and total run time of a given " +
+                    "media type.\n" +
+                "6: Output your library to a file.\n" +
+                "7: Exit the program.\n"
+
+        OUTPUT "\n Welcome to Music Library, the easy to use " +
+                "program that manages your music.\n" +
+                "Please enter a file name to create your library.\n"
+
+        //As the library must be initialized before the program starts,
+        //  if file input fails, we will exit the program.
+        TRY
+            transcript := library.inputCSV <- FileManager.readFile <-
+                THIS.getFileNameR <- None
+            OUTPUT transcript
+        CATCH File Input Error
+            THROW File Input Error
+        END TRY CATCH
+
+        WHILE option != 7 DO
+            option := THIS.promptRangedIntInput <- prompt, 1, 8
+            CASE option
+                1:
+                    this.addSong <- library
+                2:
+                    OUTPUT library.duration <- None (2 Decimal Places)
+                3:
+                    OUPUT library.playAll <- None
+                4:
+                    THIS.playSong <- library
+                5:
+                    THIS.mediaSearchMenu <- library
+                6:
+                    THIS.outputLibrary <- library
+                7:
+                    OUTPUT "Goodbye."
+            END CASE
+        END WHILE
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: outputLibrary
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        TRY
+            FileManager.writeFile <- (THIS.getFileNameW <- None,
+                library.outputCSV <- None )
+        CATCH File Not Found fileEx
+            OUTPUT fileEx.getMessage <- None
+        CATCH File IO error ioEx
+            OUTPUT ioEx.getMessage <- None
+        END TRY CATCH
+    END
+
+
+
+
+    SUBMODULE: addSong
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        prompt := "Please enter the media type you would like to " +
+            "add to your library.\n" +
+            "1. Record\n" +
+            "2: Digital\n" +
+            "3: Cassette\n" +
+            "4: Exit the menu\n"
+        option := THIS.promptRangedIntInput <- prompt, 1, 5
+
+        CASE option
+            1:
+                THIS.addRecord( library )
+            2:
+                THIS.addDigital( library )
+            3:
+                THIS.addCassette( library )
+        END CASE
+    END
+
+
+
+
+    SUBMODULE: addRecord
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        OUTPUT "Please enter the song name: "
+        INPUT name (String)
+        OUTPUT "Please enter the artist name: "
+        INPUT artist (String)
+        OUTPUT "Please enter the duration: "
+        duration := THIS.getReal <- None
+        OUTPUT "Please enter the track number: "
+        trackNumber := THIS.getInteger <- None
+        OUTPUT "Please enter the play speed: "
+        INPUT playSpeed (String)
+
+        TRY
+            library.addMusic <- (CONSTRUCT Record USING name, artist,
+                duration, trackNumber, playSpeed)
+        CATCH IllegalArgument ex
+            OUTPUT ex.getMessage <- None
+        END TRY CATCH
+    END
+
+
+
+
+    SUBMODULE: addDigital
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        OUTPUT "Please enter the song name: "
+        INPUT name (String)
+        OUTPUT "Please enter the artist name: "
+        INPUT artist (String)
+        OUTPUT "Please enter the duration: "
+        duration := THIS.getReal <- None
+        OUTPUT "Please enter the digital music type: "
+        INPUT type (String)
+
+        TRY
+            library.addMusic <- (CONSTRUCT Digital USING name, artist,
+                duration, type)
+        CATCH IllegalArgument ex
+            OUTPUT ex.getMessage <- None
+        END TRY CATCH
+    END
+
+
+
+
+    SUBMODULE: addCassette
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        OUTPUT "Please enter the song name: "
+        INPUT name (String)
+        OUTPUT "Please enter the artist name: "
+        INPUT artist (String)
+        OUTPUT "Please enter the duration: "
+        duration := THIS.getReal <- None
+        OUTPUT "Please enter the track number: "
+        trackNumber := THIS.getInteger <- None
+        OUTPUT "Please enter the start time: "
+        startTime := THIS.getReal <- None
+        OUTPUT "Please enter the side: "
+        INPUT side (String)
+
+        IF LENGTH OF side != 1 THEN
+            OUTPUT Cassette.SIDE_ERROR
+        ELSE
+            TRY
+                library.addMusic <- (CONSTRUCT Cassette USING name,
+                    artist, duration, trackNumber, startTime,
+                    side.charAt <- 0 )
+            CATCH IllegalArgument ex
+                OUTPUT ex.getMessage <- None
+            END TRY CATCH
+        END IF
+    END
+
+
+
+
+    SUBMODULE: playSong
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        OUTPUT "Please enter the song name: "
+        INPUT userInput (String)
+
+        TRY
+            userOutput := library.playSong <- userInput
+        CATCH IllegalArgument ex
+            userOutput := ex.getMessage <- None
+        END TRY CATCH
+        OUTPUT userOutput
+    END
+
+
+
+
+    SUBMODULE: mediaSearchMenu
+    IMPORTS: library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        prompt := "Please enter the media type to search for.\n" +
+                "1: Record\n" +
+                "2: Digital\n" +
+                "3: Cassette\n" +
+                "4: Exit the menu\n"
+        option := promptRangedIntInput <- prompt, 1, 5
+
+        CASE option
+            1:
+                OUTPUT "Please enter the play speed of the record: "
+                INPUT playSpeed (String)
+                search <- playSpeed, library
+            2:
+                OUTPUT "Please enter the codec of the digital music file: "
+                INPUT type (String)
+                search <- type, library
+            3:
+                OUTPUT "Please enter the side of the cassette: "
+                INPUT side (String)
+                search <- side, library
+        END CASE
+    END
+
+
+
+
+    SUBMODULE: search
+    IMPORTS: inSearch (String), library (MusicCollection)
+    EXPORT: None
+    ALGORITHM:
+        result := library.searchMusic <- inSearch
+        duration := 0.0
+        OUTPUT "Number of songs: " + LENGTH OF result
+        FOR i := 0 TO LENGTH OF result (Exclusive) INC BY 1
+            duration := Music.addDuration <- duration,
+                result[i].getDuration <- None
+        END FOR
+        OUTPUT "Total Duration: " + (2 Decimal Places)duration
+    END
+
+
+
+
+    SUBMODULE: getReal
+    IMPORTS: None
+    EXPORT: userInput (Real)
+    ALGORITHM:
+        INPUT userInput (Real)
+    END
+
+
+
+
+    SUBMODULE: getInteger
+    IMPORTS: None
+    EXPORT: userInput (Integer)
+    ALGORITHM:
+        INPUT userInput (Integer)
+    END
+
+
+
+
+    SUBMODULE: promptRangedIntInput
+    IMPORTS: prompt (String), low (Integer), high (Integer)
+    EXPORT: input (Integer)
+    ALGORITHM:
+        error := "Please enter an integer between " + low +
+            " and " +  ( high - 1 ) + " inclusive.\n"
+        strout := prompt
+
+        DO
+            OUTPUT strout
+            strout := error
+            INPUT input (Integer)
+        WHILE input < low OR input >= high
+    END
+
+
+
+
+    SUBMODULE: getFileNameR
+    IMPORTS: None
+    EXPORT: filePath (String)
+    ALGORITHM:
+        prompt := "Please enter the filename to read from: "
+        strout := prompt
+
+        DO
+            validFileName := TRUE
+            OUTPUT strout
+            INPUT filePath (String)
+            CONSTRUCT file USING filePath
+            IF file DOESNT EXIST THEN
+                validFileName := FALSE
+                strout := "This file does not exist.\n" + prompt
+            END IF
+            IF file IS A DIRECTORY THEN
+                validFileName := FALSE
+                strout := "Cannot read from a directory name.\n" + prompt
+            END IF
+        WHILE !validFileName
+    END
+
+
+
+
+    SUBMODULE: getFileNameW
+    IMPORTS: None
+    EXPORT: filePath (String)
+    ALGORITHM:
+        prompt := "Please enter the filename to save to: "
+        strout := prompt
+
+        DO
+            validFileName := TRUE
+            OUTPUT strout
+            INPUT filePath (String)
+            CONSTRUCT file USING filePath
+            IF file EXISTS THEN
+                validFileName := promptOverwrite <- None
+                strout := prompt
+            END IF
+            IF file IS A DIRECTORY THEN
+                validFileName := FALSE
+                strout := "Cannot write to a directory name.\n" + prompt
+            END IF
+        WHILE !validFileName
+    END
+
+
+
+
+    SUBMODULE: promptOverwrite
+    IMPORTS: None
+    EXPORTS: overwrite (Boolean)
+    ALGORITHM:
+        OUTPUT "This file exists. Do you want to overwrite it?\nYes(y) | No (n)"
+        validInput := TRUE
+        overwrite := FALSE
+
+        DO
+            validInput := TRUE
+            INPUT decision (Character)
+            CASE decision
+                'y', 'Y':
+                    overwrite := true
+                'n', 'N':
+
+                DEFAULT:
+                    validInput := FALSE
+                    OUTPUT "Invalid input. Please try again."
+            END CASE
+        WHILE !validInput
+    END
