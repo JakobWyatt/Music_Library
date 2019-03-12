@@ -1,0 +1,55 @@
+\documentclass{article}
+
+\begin{document}
+\begin{center}
+    \Huge
+    OOPD Assignment Stage 3 Report\\
+    \large
+    Jakob Wyatt\\
+    19477143
+\end{center}
+
+\section{Simplification of Design using Inheritance}
+The first way that inheritance simplified the design was
+in the Record, Digital, and Cassette classes. Many of the 
+methods that were duplicated between these classes could be moved
+into the Music superclass instead, and some code within the constructors
+could be delegated to the super constructor instead.\\
+The second way that inheritance simplified the design was in the 
+MusicCollection class; specifically, the use of arrays to store the
+music objects. By using a single array to store the music objects,
+instead of three, much of the codebase in MusicCollection could be
+simplified. The first example of this is in the getters and setters.
+As only one array now existed, MusicCollection only required one 
+getter and setter, instead of the three equivalent ones it used previously.
+The search and display algorithms were also simplified, as they only required
+one loop instead of three.
+
+\section{Complications introduced by Inheritance}
+There was only one complication introduced by implementing inheritance.
+This was the implementation of a CSV constructor for Music sub-classes
+such as Record, Digital and Cassette.\\
+The reason why this was so difficult
+to implement was because java requires the super constructor to be the first
+statement in the method. However, checking must be done on the csv string
+before some of it is passed to the super constructor
+(e.g. Null checks, valid array index checks).\\
+However, due to the mutability
+of Music (as required in the assignment brief), this problem was rather
+simple to solve. Instead of having a CSV constructor in Music, there was
+instead a method that input CSV data and set class fields to this data.
+This meant that the sub class CSV constructors could call the default
+super constructor, make any checks required, and then call the input CSV
+method on the super class.
+
+\section{Justification of Down Casting}
+The only down casting present in this code are the equals
+methods, when down casting from the Object type to the class
+type.
+This is unavoidable, as getter methods must be called
+on the Object to determine if it is equal. The downcasting also
+only occurs after it has been determined that the Object
+is an instance of the class. This is also the canonical way
+of implementing the equals method.
+
+\end{document}
