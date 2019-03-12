@@ -1,0 +1,368 @@
+//FILENAME: Music_Pseudocode.txt
+//AUTHOR: Jakob Wyatt
+//PURPOSE: Pseudocode for abstract class for Music Objects.
+//REFERENCES: None
+//COMMENTS: None
+//REQUIRES: None
+//DATE CREATED: 26/10/2018
+
+ABSTRACT CLASS Music:
+
+    CLASS CONSTANTS:
+
+    DURATION_MIN := 0.01
+    DURATION_MAX := 9.60
+    SECOND_MAX := 60
+    NAME_ERROR := "Names cannot be empty."
+    ARTIST_ERROR := "Artist names " +
+        "cannot be empty."
+    DURATION_ERROR := "Duration must be a valid " +
+        "time between 0.0 and 9.59 inclusive. " +
+        "Check documentation.txt for more information."
+
+
+
+
+    CLASS FIELDS:
+
+    name (String)
+    artist (String)
+    duration (Real)
+
+
+
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        name := "a"
+        artist := "a"
+        duration := DURATION_MIN
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inMusic (Music)
+    EXPORT:
+    ALGORITHM:
+        IF inMusic = NULL THEN
+            FAIL "Invalid Music object."
+        END IF
+        name := inMusic.getName <- None
+        artist := inMusic.getArtist <- None
+        duration := inMusic.getDuration <- None
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR:
+    IMPORTS: inName (String), inArtist (String), inDuration (String)
+    EXPORT:
+    ALGORITHM:
+        validateMusic <- inName, inArtist, inDuration
+
+        name := inName
+        artist := inArtist
+        duration := inDuration
+    END
+
+
+
+
+    SUBMODULE: inputCSV
+    IMPORTS: csv (ARRAY OF String)
+    EXPORT: None
+    ALGORITHM:
+        //ensure that we can read from the csv data
+        IF csv = NULL THEN
+            FAIL "CSV data cannot be null."
+        END IF
+        FOR i := 0 TO LENGTH OF csv (Exclusive) INC BY 1
+            IF csv[i] = NULL THEN
+                FAIL "CSV data cannot be null."
+            END IF
+        END FOR
+
+        //ensure that we will not get any
+        //  exceptions when accessing array elements.
+        IF LENGTH OF csv != 3 THEN
+            FAIL "Incorrect number of columns."
+        END
+        //ensure that the numbers are convertable.
+        TRY
+            duration := Double.parseDouble <- csv[2]
+        CATCH NumberFormat ex
+            FAIL DURATION_ERROR
+        END TRY CATCH
+
+        validateMusic <- csv[0], csv[1], inDuration
+
+        name := csv[0]
+        artist := csv[1]
+    END
+
+
+
+
+    GETTERS AND SETTERS:
+
+    SUBMODULE: getName
+    IMPORTS: None
+    EXPORT: name (String)
+    ALGORITHM:
+        name
+    END
+
+
+
+
+    SUBMODULE: getArtist
+    IMPORTS: None
+    EXPORT: artist (String)
+    ALGORITHM:
+        artist
+    END
+
+
+
+
+    SUBMODULE: getDuration
+    IMPORTS: None
+    EXPORT: duration (Real)
+    ALGORITHM:
+        duration
+    END
+
+
+
+
+    SUBMODULE: setName
+    IMPORTS: inName (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateName <- inName THEN
+            FAIL NAME_ERROR
+        END IF
+        name := inName
+    END
+
+
+
+
+    SUBMODULE: setArtist
+    IMPORTS: inArtist (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateArtist <- inArtist THEN
+            FAIL ARTIST_ERROR
+        END IF
+        artist := inArtist
+    END
+
+
+
+
+    SUBMODULE: setDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateDuration <- inDuration THEN
+            FAIL DURATION_ERROR
+        END IF
+        duration := inDuration
+    END
+
+
+
+
+    //MUST BE OVERRIDDEN
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF inObj INSTANCEOF Music THEN
+            inMusic := (Convert to Music)inObj
+            same :=  (inMusic.getName <- None).equals <- name AND
+                    (inMusic.getArtist <- None).equals <- artist AND
+                    inMusic.getDuration <- None = duration AND
+        END IF
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: musicString (String)
+    ALGORITHM:
+        musicString := "name: " + name + ", artist: " + artist +
+            ", duration: " + duration
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (String)
+    ALGORITHM:
+        output := name + "," + artist + "," +
+            duration (2 Decimal Places)
+    END
+
+
+
+
+    ABSTRACT METHODS:
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORT: Music
+
+    SUBMODULE: search
+    IMPORTS: String
+    EXPORT: Boolean
+
+    SUBMODULE: play
+    IMPORTS: None
+    EXPORT: String
+
+
+
+
+    STATIC METHODS:
+
+    SUBMODULE: addDuration
+    IMPORTS: x, y (Real)
+    EXPORT: sum (Real)
+    ALGORITHM:
+        minutes := (Convert to Integer)x +
+            (Convert to Integer)y
+        seconds :=   (Convert to Integer)( x x 100.0 ) MOD 100 +
+                    (Convert to Integer)( y x 100.0 ) MOD 100
+        minutes := minutes + seconds DIV 60
+        seconds := seconds MOD 60
+
+        sum := (Convert to Real)minutes + (double)seconds / 100.0
+    END
+
+
+
+    PROTECTED STATIC METHODS:
+
+    SUBMODULE: validateTime
+    IMPORTS: time, minTime, maxTime (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        seconds := (Convert to Integer)( time x 100.0 ) MOD 100
+
+        IF time < minTime OR time >= maxTime
+            valid := FALSE
+        END IF
+        IF seconds < 0 OR seconds >= SECOND_MAX
+            valid := FALSE
+        END IF
+    END
+
+
+
+
+    SUBMODULE: subArrayCopy
+    IMPORTS: arr (ARRAY OF String), min (Integer), max (Integer)
+    EXPORT: subArr (ARRAY OF String)
+    ALGORITHM:
+        IF arr = NULL THEN
+            FAIL "Array cannot be null."
+        END IF
+        IF min < 0 OR max > LENGTH OF arr OR max <= min THEN
+            FAIL "Array indexes are invalid"
+        END IF
+        CONSTRUCT subArr (ARRAY OF String) with LENGTH := max - min
+        FOR i := low TO high (Exclusive) INC BY 1
+            subArr[i - low] = arr[i]
+        END FOR
+    END
+
+
+
+
+    PRIVATE STATIC METHODS:
+
+    SUBMODULE: validateMusic
+    IMPORTS: inName (String), inArtist (String), inDuration (Real)
+    EXPORT: None
+    ALGORITHM:
+        valid := TRUE
+        err := ""
+
+        IF !validateName <- inName THEN
+            VALID := FALSE
+            err := err + NAME_ERROR
+        END IF
+        IF !validateArtist <- inArtist THEN
+            VALID := FALSE
+            err := err + ARTIST_ERROR
+        END IF
+        IF !validateDuration <- inDuration THEN
+            VALID := FALSE
+            err := err + DURATION_ERROR
+        END IF
+
+        IF !valid THEN
+            FAIL err
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateName
+    IMPORTS: inName (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inName
+    END
+
+
+
+
+    SUBMODULE: validateArtist
+    IMPORTS: inArtist (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := !nullOrEmpty <- inArtist
+    END
+
+
+
+
+    SUBMODULE: validateDuration
+    IMPORTS: inDuration (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := validateTime <- inDuration, DURATION_MIN, DURATION_MAX
+    END
+
+
+
+
+    SUBMODULE: nullOrEmpty
+    IMPORTS: x (String)
+    EXPORT: isNullOrEmpty (Boolean)
+    ALGORITHM:
+        isNullOrEmpty := FALSE
+        IF x = NULL THEN
+            isNullOrEmpty := TRUE
+        ELSE
+            IF LENGTH OF x = 0 THEN
+                isNullOrEmpty := TRUE
+            END IF
+        END IF
+    END
