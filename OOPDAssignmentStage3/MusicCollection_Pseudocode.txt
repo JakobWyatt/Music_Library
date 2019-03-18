@@ -1,0 +1,323 @@
+// FILE: MusicCollection_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class that controls arrays of music objects.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 17/10/2018
+// Modification history:
+//  None
+
+CLASS MusicCollection:
+
+    CLASS CONSTANTS:
+
+    MUSIC_MAX := 30
+
+    CLASS FIELDS:
+
+
+    music (ARRAY OF Music)
+    musicNum (Integer)
+
+
+
+
+    PUBLIC SUBMODULES:
+
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT music USING MUSIC_MAX
+        musicNum := 0
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR
+    IMPORTS: inMusic (ARRAY OF Music)
+    EXPORT:
+    ALGORITHM:
+        THIS.setMusic <- inMusic
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inMusicCollection (MusicCollection)
+    EXPORT:
+    ALGORITHM:
+        IF inMusicCollection = NULL THEN
+            FAIL"Music collection cannot be null"
+        END IF
+        THIS.setMusic <- inMusicCollection.getMusic <- None
+    END
+
+
+
+
+    SUBMODULE: getMusic
+    IMPORTS: None
+    EXPORT: outMusic (ARRAY OF Music)
+    ALGORITHM:
+        FOR i := 0 TO musicNum (Exclusive) INC BY 1
+            outMusic[i] := music[i].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: setMusic
+    IMPORTS: inMusic (ARRAY OF Music)
+    EXPORT: None
+    ALGORITHM:
+        IF inMusic = NULL THEN
+           FAIL "Music array cannot be null."
+        END IF
+        IF LENGTH OF inMusic > MUSIC_MAX THEN
+            FAIL "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+
+        FOR i := 0 TO LENGTH OF inMusic (Exclusive) INC BY 1
+            IF inMusic[i] = NULL THEN
+                FAIL "Music cannot be null."
+            END IF
+        END FOR
+        FOR i := 0 TO LENGTH OF inMusic (Exclusive) INC BY 1
+            music[i] := inMusic[i].clone <- None
+        END FOR
+        musicNum := LENGTH OF inMusic
+    END
+
+
+
+
+    SUBMODULE: addMusic
+    IMPORTS: inMusic (Music)
+    EXPORT: None
+    ALGORITHM:
+        IF inMusic = NULL THEN
+            FAIL "Music cannot be null."
+        END IF
+        IF musicNum >= MUSIC_MAX THEN
+            FAIL "Only " + MUSIC_MAX + " of each music type can be accepted."
+        END IF
+        music[musicNum] = inMusic.clone <- None
+        musicNum := musicNum + 1
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF inObj INSTANCEOF MusicCollection THEN
+            inMusicCollection := (Convert to MusicCollection)inObj
+            same := arrayEqual <-
+                (inMusicCollection.getMusic <- None), (THIS.getMusic <- None)
+        END IF
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: MusicCollectionString (String)
+    ALGORITHM:
+        MusicCollectionString := ""
+        FOR i := 0 TO musicNum (Exclusive) INC BY 1
+            MusicCollectionString := MusicCollectionString +
+                music[i].toString <- None + "\n"
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORT: musicCollectionClone (MusicCollection)
+    ALGORITHM:
+        musicCollectionClone := CONSTRUCT MusicCollection USING THIS
+    END
+
+
+
+
+    SUBMODULE: duration
+    IMPORTS: None
+    EXPORT: totalDuration (Real)
+    ALGORITHM:
+        totalDuration := 0.0
+        FOR i := 0 TO musicNum (Exclusive) INC BY 1
+            totalDuration := Music.addDuration <- totalDuration,
+                music[i].getDuration <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: playAll
+    IMPORTS: None
+    EXPORT: instructions (String)
+    ALGORITHM:
+        instructions := ""
+        FOR i := 0 TO musicNum (Exclusive) INC BY 1
+            instructions := instructions +
+                music[i].play <- None + "\n"
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: playSong
+    IMPORTS: inName (String)
+    EXPORT: instructions (String)
+    ALGORITHM:
+        musicIter := 0
+        IF inName = NULL THEN
+            FAIL "Name cannot be null."
+        END IF
+
+        WHILE musicIter != musicNum AND
+            !inName.equals <-music[musicIter].getName <- None DO
+            musicIter := musicIter + 1
+        END WHILE
+
+        IF musicIter = musicNum THEN
+            FAIL "The song was not found in the library."
+        END IF
+
+        instructions := music[musicIter].play <- None
+    END
+
+
+
+
+    SUBMODULE: searchMusic
+    IMPORTS: inSearch (String)
+    EXPORT: outMusic (ARRAY OF Music)
+    ALGORITHM:
+        indexNum := 0
+        FOR i := 0 TO musicNum (Exclusive) INC BY 1
+            IF music[i].search <- inSearch THEN
+                indexes[indexNum] := i
+                indexNum := indexNum + 1
+            END IF
+        END FOR
+
+        FOR i := 0 TO indexNum (Exclusive) INC BY 1
+            outMusic[i] := music[indexes[i]].clone <- None
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: inputCSV
+    IMPORTS: csv (ARRAY OF String)
+    EXPORT: transcript (String)
+    ALGORITHM:
+        transcript := ""
+        IF csv = NULL THEN
+            THROW IllegalArgument <- "Array cannot be null."
+        END IF
+        IF LENGTH OF csv = 0 THEN
+            THROW IllegalArgument <- "Array cannot be empty."
+        END IF
+
+        FOR i := 0 TO LENGTH OF csv (Exclusive) INC BY 1
+            IF csv[i] = NULL THEN
+                THROW IllegalArgument <- "Elements of array cannot be null."
+            END IF
+        END FOR
+
+        FOR i := TO LENGTH OF csv (Exclusive) INC BY 1
+            transcript := transcript + THIS.processLine <- csv[i], i + "\n"
+        END FOR
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (ARRAY OF String)
+    ALGORITHM:
+        FOR i := 0 TO musicNum (Exclusive) INC BY 1
+            output[i] := music[i].outputCSV <- None
+        END FOR
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: processLine
+    IMPORTS: data (String), lineNum (Integer)
+    EXPORT: transcript (String)
+    ALGORITHM:
+        discard := "Discarding line " + ( lineNum + 1 ) + ": "
+
+        IF LENGTH OF data = 0 THEN
+            transcript := discard + "Empty CSV row."
+        ELSE
+            CASE data.charAt <- 0
+                'R', 'r':
+                    TRY
+                        THIS.addMusic <- CONSTRUCT Record USING data
+                        transcript := "Record details correct"
+                    CATCH IllegalArgument ex
+                        transcript := discard + ex.getMessage <- None
+                    END TRY CATCH
+                'D', 'd':
+                    TRY
+                        THIS.addMusic <- CONSTRUCT Digital USING data
+                        transcript := "Digital details correct"
+                    CATCH IllegalArgument ex
+                        transcript := discard + ex.getMessage <- None
+                    END TRY CATCH
+                'C', 'c':
+                    TRY
+                        THIS.addMusic <- CONSTRUCT Cassette USING data
+                        transcript := "Cassette details correct"
+                    CATCH IllegalArgument ex
+                        transcript := discard + ex.getMessage <- None
+                    END TRY CATCH
+                DEFAULT:
+                    transcript := discard + "Invalid Music Type."
+            END CASE
+        END IF
+    END
+
+
+
+
+    SUBMODULE: arrayEqual
+    IMPORTS: x, y (ARRAY OF Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF LENGTH OF x = LENGTH OF y THEN
+            same := TRUE
+            FOR i := 0 TO LENGTH OF x (Exclusive) INC BY 1
+                IF !x[i].equals <- y[i]
+                    same := FALSE
+                END IF
+            END FOR
+        END IF
+    END
