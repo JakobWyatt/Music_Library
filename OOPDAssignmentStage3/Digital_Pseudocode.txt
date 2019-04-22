@@ -1,0 +1,236 @@
+// FILE: Digital_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class to contain digitals.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 16/10/2018
+// Modification history:
+//  None
+
+CLASS Digital INHERITS FROM Music
+
+    CLASS CONSTANTS:
+
+    TYPE_ERROR := "The only supported digital " +
+        "music file types are 'wav', 'mp3', and 'acc'. " +
+        "Check documentation.txt for more information."
+
+
+
+
+    PRIVATE CLASS CONSTANTS:
+
+    TYPE_VALID (ARRAY OF String) := { "wav", "mp3",
+        "acc" }
+
+
+
+
+    CLASS FIELDS:
+
+    type (String)
+
+
+
+    PUBLIC SUBMODULES:
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING None
+        type = TYPE_VALID[0]
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inDigital (Digital)
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING inDigital
+        type := inDigital.getType <- None
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR:
+    IMPORTS: inName (String), inArtist (String), inDuration (String),
+        inType (String)
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING inName, inArtist, inDuration
+
+        IF inType = NULL THEN
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+        inTypeLower := inType.toLowerCase <- None
+
+        validateDigital <- inTypeLower
+        type := inTypeLower
+    END
+
+
+
+
+    CSV CONSTRUCTOR
+    IMPORTS: csv (String)
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING None
+        parseError = ""
+
+        //ensure that we can read from the csv data
+        IF csv = NULL THEN
+            THROW IllegalArgument <- "CSV data cannot be null."
+        END IF
+
+        data = csv.split <- ","
+        //ensure that we will not get any
+        //  exceptions when accessing array elements.
+        IF LENGTH OF data != 5 THEN
+            THROW IllegalArgument <-
+                "Incorrect number of columns."
+        END
+        IF !( data[0].equals <- "D" OR data[0].equals <- "d" THEN
+            THROW IllegalArgument <- "Incorrect music type."
+        END IF
+
+        inTypeLower := data[4].toLowerCase <- None
+
+        validateDigital <- inTypeLower
+
+        SUPER.inputCSV <- Music.subArrayCopy <- data, 1, 4
+        type := inTypeLower
+    END
+
+
+
+    GETTERS AND SETTERS:
+
+    SUBMODULE: getType
+    IMPORTS: None
+    EXPORT: type (String)
+    ALGORITHM:
+        type
+    END
+
+
+
+
+    SUBMODULE: setType
+    IMPORTS: inType (String)
+    EXPORT: None
+    ALGORITHM:
+        IF inType = NULL
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+        inTypeLower := inType.toLowerCase <- None
+        IF !validateType <- inTypeLower THEN
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+        type := inTypeLower
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE
+        IF inObj INSTANCEOF Digital THEN
+            inDigital := (Convert to Digital)inObj
+            same := SUPER.equals <- inDigital AND
+                    (inDigital.getType <- None).equals <- type
+        END IF
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORTS: digitalClone (Digital)
+    ALGORITHM:
+        digitalClone := CONSTRUCT Digital USING THIS
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: digitalString (String)
+    ALGORITHM:
+        digitalString := SUPER.toString <- None + ", type: " + type
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (String)
+    ALGORITHM:
+        output := "D," + SUPER.outputCSV <- None + "," + type
+    END
+
+
+
+
+    SUBMODULE: search
+    IMPORTS: inType (String)
+    EXPORT: exists (Boolean)
+    ALGORITHM:
+        exists := FALSE
+        IF inType != NULL THEN
+            exists := (inType.toLowerCase <- None).equals <- type
+        END IF
+    END
+
+
+
+
+    SUBMODULE: play
+    IMPORTS: None
+    EXPORT: playString (String)
+    ALGORITHM:
+        playString := SUPER.getName <- None + " requires the " + type +
+            " codec to play."
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: validateDigital
+    IMPORTS: inType (String)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateType <- inType THEN
+            THROW IllegalArgument <- TYPE_ERROR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateType
+    IMPORTS: inType (String)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := FALSE
+        FOR i := 0 TO LENGTH OF TYPE_VALID (Exclusive) INC BY 1
+            IF TYPE_VALID[i].equals <- inType THEN
+                valid := TRUE
+            END IF
+        END FOR
+    END
