@@ -1,0 +1,348 @@
+// FILE: Cassette_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Class to contain cassettes.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: None
+// Last Mod: 16/10/2018
+// Modification history:
+//  None
+
+CLASS Cassette INHERITS FROM Music
+
+    CLASS CONSTANTS:
+
+    //public class constants
+    //all valid ranges are represented in the form [min, max)
+    TRACK_NUMBER_MIN := 0
+    TRACK_NUMBER_MAX := 21
+    START_TIME_MIN := 0.0
+    START_TIME_MAX := 160.01
+
+    TRACK_NUMBER_ERROR := "Track number " +
+        "must be a valid integer between 0 and 20 inclusive."
+    START_TIME_ERROR := "Start time must be a " +
+        "valid time between 0.0 and 160.0 inclusive. " +
+        "Check documentation.txt for more information."
+    SIDE_ERROR  := "The only supported cassette " +
+        "sides are 'A' and 'B'. " +
+        "Check documentation.txt for more information."
+
+
+
+
+    PRIVATE CLASS CONSTANTS:
+
+    SIDE_VALID (ARRAY OF Character) := { 'A', 'B' }
+
+
+
+
+    CLASS FIELDS:
+
+    trackNumber (Integer)
+    startTime (Real)
+    side (Character)
+
+
+
+    PUBLIC SUBMODULES:
+
+    DEFAULT CONSTRUCTOR
+    IMPORTS: None
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING None
+        trackNumber := TRACK_NUMBER_MIN
+        startTime := START_TIME_MIN
+        side := SIDE_VALID[0]
+    END
+
+
+
+
+    COPY CONSTRUCTOR
+    IMPORTS: inCassette (Cassette)
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER WITH inCassette
+        trackNumber := inCassette.getTrackNumber <- None
+        startTime := inCassette.getStartTime <- None
+        side := inCassette.getSide <- None
+    END
+
+
+
+
+    ALTERNATE CONSTRUCTOR:
+    IMPORTS: inName (String), inArtist (String), inDuration (String),
+        inTrackNumber (Integer), inStartTime (Real), inSide (Character)
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING inName, inArtist, inDuration
+
+        inSideUpper := Character.toUpperCase <- inSide
+        validateCassette <- inTrackNumber, inStartTime, inSideUpper
+
+        trackNumber := inTrackNumber
+        startTime := inStartTime
+        side := inSideUpper
+    END
+
+
+
+
+    CSV CONSTRUCTOR
+    IMPORTS: csv (String)
+    EXPORT:
+    ALGORITHM:
+        CONSTRUCT SUPER USING None
+        parseError = "";
+
+        //ensure that we can read from the csv data
+        IF csv = NULL THEN
+            FAIL "CSV data cannot be null."
+        END IF
+
+        data := csv.split <- ","
+        //ensure that we will not get any
+        //  exceptions when accessing array elements.
+        IF LENGTH OF data != 7 THEN
+            FAIL "Incorrect number of columns."
+        END
+        IF !( data[0].equals <- "C" OR data[0].equals <- "c" THEN
+            FAIL "Incorrect music type."
+        END IF
+
+        //ensure that the numbers are convertable.
+        TRY
+            parseError := TRACK_NUMBER_ERROR
+            inTrackNumber := Integer.parseInt <- data[4]
+            parseError := START_TIME_ERROR
+            inStartTime := Double.parseDouble <- data[5]
+        CATCH NumberFormat ex
+            FAIL parseError
+        END TRY CATCH
+
+        //ensure that the side is convertable to a char
+        IF LENGTH OF data[6] != 1 THEN
+            FAIL SIDE_ERROR
+        END IF
+        inSideUpper := Character.toUpperCase <- data[6].charAt <- 0
+
+        validateCassette <- inTrackNumber, inStartTime, inSideUpper
+
+        SUPER.inputCSV <- Music.subArrayCopy <- data, 1, 4
+        trackNumber := inTrackNumber
+        startTime := inStartTime
+        side := inSideUpper
+    END
+
+
+
+
+    SUBMODULE: getTrackNumber
+    IMPORTS: None
+    EXPORT: trackNumber (Integer)
+    ALGORITHM:
+        trackNumber
+    END
+
+
+
+
+    SUBMODULE: getStartTime
+    IMPORTS: None
+    EXPORT: startTime (Real)
+    ALGORITHM:
+        startTime
+    END
+
+
+
+
+    SUBMODULE: getSide
+    IMPORTS: None
+    EXPORT: side (Character)
+    ALGORITHM:
+        side
+    END
+
+
+
+
+    SUBMODULE: setTrackNumber
+    IMPORTS: inTrackNumber (Integer)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateTrackNumber <- inTrackNumber THEN
+            FAIL TRACK_NUMBER_ERROR
+        END IF
+        trackNumber := inTrackNumber
+    END
+
+
+
+
+    SUBMODULE: setStartTime
+    IMPORTS: inStartTime (Real)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateStartTime <- inStartTime THEN
+            FAIL START_TIME_ERROR
+        END IF
+        startTime := inStartTime
+    END
+
+
+
+
+    SUBMODULE: setSide
+    IMPORTS: inSide (Character)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateSide <- inSide THEN
+            FAIL SIDE_ERROR
+        END IF
+        side := inSide
+    END
+
+
+
+
+    SUBMODULE: equals
+    IMPORTS: inObj (Object)
+    EXPORT: same (Boolean)
+    ALGORITHM:
+        same := FALSE;
+        IF inObj INSTANCEOF Cassette THEN
+            inCassette := (Convert to Cassette)inObj;
+            same =  SUPER.equals <- inCassette AND
+                    inCassette.getTrackNumber <- None = trackNumber AND
+                    inCassette.getStartTime <- None = startTime AND
+                    inCassette.getSide <- None = side;
+        END IF
+    END
+
+
+
+
+    SUBMODULE: clone
+    IMPORTS: None
+    EXPORTS: cassetteClone (Cassette)
+    ALGORITHM:
+        cassetteClone := CONSTRUCT Cassette USING THIS
+    END
+
+
+
+
+    SUBMODULE: toString
+    IMPORTS: None
+    EXPORT: cassetteString (String)
+    ALGORITHM:
+        cassetteString := SUPER.toString <- None + ", track number: "
+            + trackNumber + ", start time: " + startTime + ", side: " + side
+    END
+
+
+
+
+    SUBMODULE: outputCSV
+    IMPORTS: None
+    EXPORT: output (String)
+    ALGORITHM:
+         output := "C," + SUPER.outputCSV <- None + "," +
+            trackNumber + "," + startTime (2 Decimal Places)
+            + "," + side
+    END
+
+
+
+
+    SUBMODULE: search
+    IMPORTS: inSide (String)
+    EXPORT: exists (Boolean)
+    ALGORITHM:
+        exists := FALSE
+        IF inSide != NULL THEN
+            IF LENGTH OF inSide = 1 THEN
+                exists := side = (inSide.toUpperCase <- None).charAt <- 0
+            END IF
+        END IF
+    END
+
+
+
+
+    SUBMODULE: play
+    IMPORTS: None
+    EXPORT: playString (String)
+    ALGORITHM:
+        playString := SUPER.getName <- None + " is track number " +
+            trackNumber +
+            ", it starts at " + startTime (2 Decimal Places) +
+            " minutes, on side " + side + "."
+    END
+
+
+
+
+    PRIVATE SUBMODULES:
+
+
+    SUBMODULE: validateCassette
+    IMPORTS: inTrackNumber (Integer), inStartTime (Real), inSide (Character)
+    EXPORT: None
+    ALGORITHM:
+        IF !validateTrackNumber <- inTrackNumber THEN
+            FAIL TRACK_NUMBER_ERROR
+        END IF
+        IF !validateStartTime <- inStartTime THEN
+            FAIL START_TIME_ERROR
+        END IF
+        IF !validateSide <- inSide THEN
+            FAIL SIDE_ERROR
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateTrackNumber
+    IMPORTS: inTrackNumber (Integer)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := TRUE
+        IF inTrackNumber < TRACK_NUMBER_MIN OR
+            inTrackNumber >= TRACK_NUMBER_MAX THEN
+            valid := FALSE
+        END IF
+    END
+
+
+
+
+    SUBMODULE: validateStartTime
+    IMPORTS: inStartTime (Real)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := Music.validateTime <-
+            inStartTime, START_TIME_MIN, START_TIME_MAX
+    END
+
+
+
+
+    SUBMODULE: validateSide
+    IMPORTS: inSide (Character)
+    EXPORT: valid (Boolean)
+    ALGORITHM:
+        valid := FALSE
+        FOR i := 0 TO LENGTH OF SIDE_VALID (Exclusive) INC BY 1
+            IF inSide = SIDE_VALID[i] THEN
+                valid := TRUE
+            END IF
+        END FOR
+    END
