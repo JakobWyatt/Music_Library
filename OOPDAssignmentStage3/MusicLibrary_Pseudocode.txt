@@ -1,0 +1,31 @@
+// FILE: MusicLibrary_Pseudocode.txt
+// AUTHOR: Jakob Wyatt
+// UNIT: OOPD
+// PURPOSE: Pseudocode for Entry point of Music Library program.
+//              Includes high level exception handling.
+// REFERENCES: None
+// COMMENTS: None
+// REQUIRES: UserInterface
+// Last Mod: 27/09/2018
+// Modification history:
+//  None
+
+MAIN
+    TRY
+        ui := CONSTRUCT UserInterface USING None
+        ui.menu <- None
+    CATCH Cannot read Terminal
+        OUTPUT "Could not read input from the terminal. " +
+                "Exiting."
+    CATCH Terminal EOF
+        OUTPUT "End Of File (Crtl-D) reached " +
+                "on the terminal. Exiting."
+    CATCH File Not Found
+        OUTPUT "Could not read file. Exiting."
+    CATCH File Input Error
+        OUTPUT "An error occured while " +
+                "processing the file. Exiting."
+    CATCH IllegalArgument
+        OUTPUT "The input file is empty. Exiting."
+    END TRY CATCH
+END MAIN
