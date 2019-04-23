@@ -1,0 +1,50 @@
+Jakob Wyatt 19477143 OOPDAssignmentStage1 Documentation
+
+This document outlines the valid format of a music library file.
+
+The music library is stored in a CSV file, where each row denotes   
+    a new song in the library.
+Each row contains information about a record,
+    digital music file, or cassette.
+
+Records are stored in the form:
+    R,<Song Name>,<Artist Name>,<Song Duration>,<Track Number>,<Play Speed>
+
+Digital music files are stored in the form:
+    D,<Song Name>,<Artist Name>,<Song Duration>,<File Type>
+
+Cassettes are stored in the form:
+    C,<Song Name>,<Artist Name>,<Song Duration>,<Track Number>,
+        <Start Time>,<Cassette Side>
+
+Below is more information about the valid inputs to the program.
+Casing of a string (e.g hello vs HeLlO) does not matter.
+Quotation marks should not be included in input.
+
+Artist Name:
+    Cannot be empty.
+
+Cassette Side:
+    Either "A" or "B".
+
+File Type:
+    Either "wav", "mp3", or "acc".
+
+Play Speed:
+    Either "33 1/3 RPM", "45 RPM", or "78 RPM".
+
+Song Duration:
+    Must be a valid time in the form <MMM>.<SS>. This time must be between
+    0.0 and 9.59 inclusive, and the seconds must be valid.
+    For example, 4.60 is invalid.
+
+Song Name:
+    Cannot be empty.
+
+Start Time:
+    Must be a valid time in the form <MMM>.<SS>. This time must be between
+    0.0 and 160.0 inclusive, and the seconds must be valid.
+    For example, 4.60 is invalid.
+
+Track Number:
+    Must be a valid integer between 0 and 20 inclusive.
