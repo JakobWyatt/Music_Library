@@ -1,0 +1,9 @@
+R,Zero to Hero,The Muses,4.37,3,33 1/3 RPM
+D,Make a Man Out of You,Mulan and Chang,4.57,wav
+D,Let It Go,Elsa,4.26,mp3
+C,Hakuna Matata,Timon and Pumba and Simba,4.37,3,98.57,B
+R,Part of Your World,Ariel,4.26,6,78 RPM
+D,How Far I'll Go,Moana,4.37,acc
+C,Be Our Guest,The Dishes,2.57,1,2.30,A
+R,Street Rat,Aladin,2.57,1,45 RPM
+C,You've got a Friend in Me,Toys Credits,4.26,6,65.59,A
